@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test'
+import { skipOnboarding } from './helpers.ts'
 
 test('audio dev: engine starts after a gesture and produces signal that follows the throttle', async ({
   page,
 }) => {
+  await skipOnboarding(page)
   await page.goto('/#/dev/audio')
   await expect(page.getByTestId('audio-readout')).toContainText('audio uninitialized')
   await page.getByRole('button', { name: 'Arrancar motor' }).click()

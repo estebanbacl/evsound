@@ -84,4 +84,23 @@ describe('EngineDriver', () => {
     useTelemetryStore.getState().setEstimate(20, 3)
     expect(d.latency.frames).toBe(2) // no more updates after stop
   })
+
+  it('re-calibrates live when the vehicle changes', async () => {
+    const engine = new AudioEngine(() => fakeCtx() as unknown as AudioContext, undefined)
+    await engine.unlock()
+    let now = 0
+    const d = new EngineDriver(
+      engine,
+      () => now,
+      () => {},
+    )
+    await d.start(v8Americano, { maxSpeedKmh: 217, accelRefMs2: 6 })
+    now = 100
+    useTelemetryStore.getState().setEstimate(15, 3)
+    const loadBefore = d.frame!.load
+    d.setCalibration({ maxSpeedKmh: 150, accelRefMs2: 3 })
+    now = 200
+    useTelemetryStore.getState().setEstimate(15.1, 3)
+    expect(d.frame!.load).toBeGreaterThan(loadBefore) // same accel, smaller reference => more load
+  })
 })

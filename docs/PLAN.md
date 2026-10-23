@@ -256,7 +256,7 @@ Fases 3 y 4 pueden correr en paralelo a 1–2 (p. ej. en otra worktree de Claude
 | 1 | ☑ | 2026-10-23 | Kalman + extrapolación 60 Hz, fuentes GPS/Sim/Traza, recorder, trazas, /dev/telemetry; cobertura telemetry >90 % |
 | 2 | ☑ | 2026-10-23 | AudioEngine, Gearbox, EngineModel, SynthVoice, EngineVoice, 4 perfiles, EngineDriver, /dev/audio; e2e verifica señal en analyser. Pendiente humano: escucha subjetiva y 10 min sin glitches en dispositivo real |
 | 3 | ☑ | 2026-10-23 | Componentes ui, Background canvas, StatusBar/BottomNav reales, settings/audio/toast stores, /dev/ui, screenshots en docs/screenshots |
-| 4 | ☐ | | |
+| 4 | ☑ | 2026-10-23 | Catálogo JSON x3, detectVehicle, vehicleStore persistido, onboarding, casco procedural wire/rayos X (loft) con batería y motores ámbar interactivos, calidad auto, pausa en DriveMode/tab oculta, specs; shell 100 KB gz, 3D lazy. Sin .glb reales (placeholder procedural); fps real en MCU pendiente de prueba física |
 | 5 | ☐ | | |
 | 6 | ☐ | | |
 | 7 | ☐ | | |

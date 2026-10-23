@@ -1,0 +1,24 @@
+{
+  "id": "model-3-highland-dm",
+  "displayName": "Model 3",
+  "variant": "Highland · Dual Motor",
+  "maker": "Tesla",
+  "verified": false,
+  "body": "sedan",
+  "specs": {
+    "powerKw": 366,
+    "powerHp": 498,
+    "zeroTo100s": 4.4,
+    "rangeKm": 513,
+    "rangeCycle": "WLTP",
+    "batteryKwh": 75,
+    "dcChargeKw": 250,
+    "drivetrain": "AWD"
+  },
+  "model3d": {
+    "url": "/models/model-3-highland-dm.glb",
+    "scale": 1,
+    "cameraPreset": [5.8, 1.6, 5.2]
+  },
+  "calibration": { "maxSpeedKmh": 233, "accelRefMs2": 6.3 }
+}

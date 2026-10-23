@@ -33,3 +33,19 @@ export const IconArrowUp = (p: SVGProps<SVGSVGElement>) =>
   base(<path d="M12 4l8 9h-5v7H9v-7H4z" />, p)
 export const IconArrowDown = (p: SVGProps<SVGSVGElement>) =>
   base(<path d="M12 20l-8-9h5V4h6v7h5z" />, p)
+
+export const IconBolt = (p: SVGProps<SVGSVGElement>) =>
+  base(<path d="M13 2L4 14h6l-1 8 9-12h-6z" />, p)
+export const IconStopwatch = (p: SVGProps<SVGSVGElement>) =>
+  base(<path d="M9 1h6v2H9zm3 4a8 8 0 108 8 8 8 0 00-8-8zm1 8.4l-4-2.3.9-1.5L11 11.9V8h2z" />, p)
+export const IconRoad = (p: SVGProps<SVGSVGElement>) =>
+  base(<path d="M8 2h2l-1 20H4zm8 0h-2l1 20h5zM11 4h2v4h-2zm0 6h2v4h-2zm0 6h2v4h-2z" />, p)
+export const IconBattery = (p: SVGProps<SVGSVGElement>) =>
+  base(<path d="M16 4h-2V2h-4v2H8a1 1 0 00-1 1v16a1 1 0 001 1h8a1 1 0 001-1V5a1 1 0 00-1-1z" />, p)
+export const IconPlug = (p: SVGProps<SVGSVGElement>) =>
+  base(<path d="M16 7V2h-2v5h-4V2H8v5H6v6a5 5 0 004 4.9V22h4v-4.1a5 5 0 004-4.9V7z" />, p)
+export const IconDrive = (p: SVGProps<SVGSVGElement>) =>
+  base(
+    <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 3l2 4h-4zm-7 7h4v2H5zm14 0v2h-4v-2zm-7 7l-2-4h4z" />,
+    p,
+  )

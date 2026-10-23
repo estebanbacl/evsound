@@ -35,6 +35,8 @@ export interface LatencyStats {
 /** Wires telemetryStore → EngineModel → Voice params (setTargetAtTime). */
 export class EngineDriver {
   private model: EngineModel | null = null
+  private profile: SoundProfile | null = null
+  private cal: VehicleCalibration = defaultCalibration
   private voice: Voice | null = null
   private unsub: (() => void) | null = null
   private lastT = 0
@@ -61,13 +63,15 @@ export class EngineDriver {
     return this.voice !== null
   }
 
-  async start(profile: SoundProfile, cal: VehicleCalibration = defaultCalibration) {
+  async start(profile: SoundProfile, cal: VehicleCalibration = this.cal) {
     this.stop()
     const ctx = this.engine.context
     if (!ctx || !this.engine.input) throw new Error('AudioEngine not unlocked')
     const voice = await createVoice(ctx, profile)
     voice.connect(this.engine.input)
     this.voice = voice
+    this.profile = profile
+    this.cal = cal
     this.model = new EngineModel(profile, cal)
     Object.assign(this.model.settings, this.settings)
     this.lastT = this.now()
@@ -83,6 +87,15 @@ export class EngineDriver {
     })
   }
 
+  /** Vehicle calibration changed (e.g. another vehicle was selected): rebuild the model live. */
+  setCalibration(cal: VehicleCalibration) {
+    this.cal = cal
+    if (this.model && this.profile) {
+      this.model = new EngineModel(this.profile, cal)
+      Object.assign(this.model.settings, this.settings)
+    }
+  }
+
   setSettings(s: Partial<EngineSettings>) {
     this.settings = { ...this.settings, ...s }
     if (this.model) Object.assign(this.model.settings, s)
@@ -94,6 +107,7 @@ export class EngineDriver {
     this.voice?.stop()
     this.voice = null
     this.model = null
+    this.profile = null
     this.frame = null
   }
 

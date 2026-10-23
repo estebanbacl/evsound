@@ -23,3 +23,35 @@ export const es = {
   disclaimer: 'Proyecto independiente, no afiliado a Tesla, Inc. ni a iCAR/Chery.',
   soundOnly: 'Ajustes de sonido: no modifican el vehículo.',
 } as const
+
+export const esVehicle = {
+  title: 'Vehículo',
+  select: 'Seleccionar',
+  active: 'Activo',
+  specs: {
+    power: 'Potencia',
+    zeroTo100: '0–100 km/h',
+    range: 'Autonomía',
+    battery: 'Batería',
+    dcCharge: 'Carga DC',
+    drivetrain: 'Tracción',
+  },
+  unverified: 'Valores de referencia: sin verificar con la ficha oficial.',
+  noWebgl: 'Este navegador no soporta gráficos 3D. Las especificaciones siguen disponibles.',
+  partHint: 'Toca la batería o los motores para resaltar su especificación.',
+  onboarding: {
+    safetyTitle: 'Antes de empezar',
+    safety: [
+      'Configura la app con el vehículo en Park.',
+      'No interactúes con la pantalla mientras conduces.',
+      'Respeta la ley local. El sonido sale solo por los parlantes de cabina.',
+      'Esta app solo cambia sonido: no controla ni lee el vehículo.',
+    ],
+    accept: 'Entendido',
+    chooseTitle: 'Elige tu vehículo',
+    suggested: 'Sugerido',
+    confirm: 'Usar este vehículo',
+    prev: 'Vehículo anterior',
+    next: 'Vehículo siguiente',
+  },
+} as const

@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import { Onboarding } from '../screens/Onboarding'
+import { useVehicle, useVehicleStore } from '../state/vehicleStore'
 import { audioEngine } from '../audio/AudioEngine'
 import { engineDriver } from '../audio/EngineDriver'
 import { useAudioStore } from '../state/audioStore'
@@ -15,6 +17,8 @@ function useAudioSync() {
   const { volume, intensity, character } = useSettingsStore()
   useEffect(() => audioEngine.setVolume(volume), [volume])
   useEffect(() => engineDriver.setSettings({ intensity, character }), [intensity, character])
+  const vehicle = useVehicle()
+  useEffect(() => engineDriver.setCalibration(vehicle.calibration), [vehicle])
   useEffect(() => {
     const { setStatus, setNeedsGesture } = useAudioStore.getState()
     const sync = () => {
@@ -30,6 +34,7 @@ function useAudioSync() {
 export function AppShell() {
   useAudioSync()
   const speedMs = useTelemetryStore((s) => s.speedMs)
+  const onboarded = useVehicleStore((s) => s.onboarded)
   return (
     <div className="shell">
       <StatusBar />
@@ -41,6 +46,7 @@ export function AppShell() {
         <BottomNav />
       </div>
       <ToastHost />
+      {!onboarded && <Onboarding />}
     </div>
   )
 }

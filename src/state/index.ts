@@ -1,3 +1,5 @@
 export { useTelemetryStore } from './telemetryStore'
 export { useSettingsStore } from './settingsStore'
 export { useAudioStore } from './audioStore'
+export { useVehicleStore, useVehicle } from './vehicleStore'
+export { useDriveStore } from './driveStore'

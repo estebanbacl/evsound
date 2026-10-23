@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test'
+import { skipOnboarding } from './helpers.ts'
 
 test('telemetry dev screen replays the launch trace', async ({ page }) => {
+  await skipOnboarding(page)
   await page.goto('/#/dev/telemetry')
   await page.getByLabel('Fuente').selectOption('launch')
   await page.getByLabel('Velocidad de reproducción').selectOption('4')
