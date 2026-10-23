@@ -3,9 +3,9 @@
 Contexto permanente para Claude Code en este repo.
 
 ## Fuentes de verdad
-- `SPEC.md`: qué construir (requisitos, arquitectura, modelos de datos, algoritmos, diseño).
-- `PLAN.md`: en qué orden. Trabaja solo la fase indicada; no adelantes fases.
-- Si algo del pedido contradice SPEC.md, pregunta antes de implementar.
+- `docs/SPEC.md`: qué construir (requisitos, arquitectura, modelos de datos, algoritmos, diseño).
+- `docs/PLAN.md`: en qué orden. Trabaja solo la fase indicada; no adelantes fases.
+- Si algo del pedido contradice docs/SPEC.md, pregunta antes de implementar.
 
 ## Stack y comandos
 - Vite + React 19 + TypeScript strict · Zustand · React Router (HashRouter) · three.js/R3F · Web Audio API · vite-plugin-pwa · Vitest · Playwright
@@ -33,3 +33,4 @@ Contexto permanente para Claude Code en este repo.
 ## Pruebas sin auto
 - Usa `SimulatedSource` o `TraceReplaySource` (trazas en `public/traces/`).
 - Viewport de referencia: 1920×1200 táctil (proyecto Playwright `car`).
+- Referencias visuales de UX: `docs/referencias/Interfaz*.png`
