@@ -8,6 +8,8 @@ interface TelemetryState {
   quality: SampleQuality
   source: SampleSource | null
   running: boolean
+  /** performance.now() of the last estimate, for latency measurement. */
+  updatedAt: number
   setEstimate: (speedMs: number, accelMs2: number) => void
   setRaw: (rawSpeedMs: number, quality: SampleQuality, source: SampleSource) => void
   setRunning: (running: boolean) => void
@@ -21,11 +23,12 @@ const initial = {
   quality: 'good' as SampleQuality,
   source: null,
   running: false,
+  updatedAt: 0,
 }
 
 export const useTelemetryStore = create<TelemetryState>((set) => ({
   ...initial,
-  setEstimate: (speedMs, accelMs2) => set({ speedMs, accelMs2 }),
+  setEstimate: (speedMs, accelMs2) => set({ speedMs, accelMs2, updatedAt: performance.now() }),
   setRaw: (rawSpeedMs, quality, source) => set({ rawSpeedMs, quality, source }),
   setRunning: (running) => set({ running }),
   reset: () => set(initial),

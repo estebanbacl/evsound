@@ -3,6 +3,7 @@ import { AppShell } from './AppShell'
 import { VehicleScreen } from '../screens/Vehicle'
 import { ListenScreen } from '../screens/Listen'
 import { DynamicsScreen } from '../screens/Dynamics'
+import { AudioDevScreen } from '../screens/Dev/AudioDevScreen'
 import { TelemetryDevScreen } from '../screens/Dev/TelemetryDevScreen'
 
 export function App() {
@@ -13,6 +14,7 @@ export function App() {
         <Route path="/listen" element={<ListenScreen />} />
         <Route path="/dynamics" element={<DynamicsScreen />} />
         <Route path="/dev/telemetry" element={<TelemetryDevScreen />} />
+        <Route path="/dev/audio" element={<AudioDevScreen />} />
         <Route path="*" element={<Navigate to="/vehicle" replace />} />
       </Route>
     </Routes>
