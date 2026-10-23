@@ -113,3 +113,25 @@ export const esListen = {
   duck: 'Atenuar',
   pause: 'Pausar',
 } as const
+
+export const esPwa = {
+  updateAvailable: 'Hay una versión nueva de la app.',
+  update: 'Actualizar',
+  later: 'Después',
+  offline: 'Sin conexión',
+  offlineReady: 'Lista para usar sin conexión',
+  packs: {
+    title: 'Sonidos descargados',
+    hint: 'Descarga los paisajes sonoros para escucharlos sin conexión.',
+    engines: 'Perfiles de motor: incluidos en la app (se sintetizan en el dispositivo).',
+    download: 'Descargar',
+    remove: 'Eliminar',
+    cancel: 'Cancelar',
+    installed: 'Descargado',
+    partial: 'Incompleto',
+    missing: 'No descargado',
+    storage: 'Almacenamiento',
+    loadError: 'No se pudo cargar la lista de paquetes.',
+    needsNetwork: 'Necesitas conexión para descargar.',
+  },
+} as const

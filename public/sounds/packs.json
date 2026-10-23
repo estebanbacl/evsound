@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "id": "ambient-orbita",
+      "kind": "ambient",
+      "title": "Órbita",
+      "bytes": 3638470,
+      "extras": [
+        "/sounds/ambient/catalog.json"
+      ],
+      "files": [
+        {
+          "url": "/sounds/ambient/orbita/01-perigeo.wav",
+          "bytes": 705644
+        },
+        {
+          "url": "/sounds/ambient/orbita/02-horizonte-lento.wav",
+          "bytes": 749744
+        },
+        {
+          "url": "/sounds/ambient/orbita/03-cinturon-de-polvo.wav",
+          "bytes": 661544
+        },
+        {
+          "url": "/sounds/ambient/orbita/04-luz-del-apogeo.wav",
+          "bytes": 727694
+        },
+        {
+          "url": "/sounds/ambient/orbita/05-aterrizaje-suave.wav",
+          "bytes": 793844
+        }
+      ]
+    },
+    {
+      "id": "ambient-lluvia-en-cabina",
+      "kind": "ambient",
+      "title": "Lluvia en cabina",
+      "bytes": 3572320,
+      "extras": [
+        "/sounds/ambient/catalog.json"
+      ],
+      "files": [
+        {
+          "url": "/sounds/ambient/lluvia-en-cabina/01-gotas-en-el-techo.wav",
+          "bytes": 683594
+        },
+        {
+          "url": "/sounds/ambient/lluvia-en-cabina/02-lluvia-ligera.wav",
+          "bytes": 661544
+        },
+        {
+          "url": "/sounds/ambient/lluvia-en-cabina/03-tormenta-lejana.wav",
+          "bytes": 749744
+        },
+        {
+          "url": "/sounds/ambient/lluvia-en-cabina/04-parabrisas.wav",
+          "bytes": 705644
+        },
+        {
+          "url": "/sounds/ambient/lluvia-en-cabina/05-cabina-calida.wav",
+          "bytes": 771794
+        }
+      ]
+    }
+  ]
+}

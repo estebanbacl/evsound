@@ -25,6 +25,7 @@ import { BigNumber } from '../../ui/components/BigNumber'
 import { Panel } from '../../ui/components/Panel'
 import { SegmentedControl } from '../../ui/components/SegmentedControl'
 import { Slider } from '../../ui/components/Slider'
+import { PacksPanel } from '../../app/PacksPanel'
 import { Waveform } from './Waveform'
 import './dynamics.css'
 
@@ -189,6 +190,7 @@ export function DynamicsScreen() {
           </button>
         )}
         <p className="dyn-note">{t.parkOnly}</p>
+        <PacksPanel />
       </div>
 
       <div className="dyn-instruments">

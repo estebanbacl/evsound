@@ -140,3 +140,67 @@
   color: var(--accent);
   letter-spacing: 0.2em;
 }
+
+.update-prompt {
+  position: fixed;
+  top: calc(var(--status-h) + var(--space-2));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--accent-deep);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--glow);
+}
+.update-prompt button,
+.pack button {
+  min-height: var(--touch);
+  padding: 0 var(--space-3);
+  background: rgb(255 42 42 / 18%);
+  border: var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+}
+.update-prompt .is-ghost {
+  background: transparent;
+  border-color: var(--accent-dim);
+}
+.pack-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+.pack {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+.pack-info {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+}
+.pack-info span {
+  font-size: 14px;
+  color: var(--accent-dim);
+}
+.pack-bar {
+  height: 4px;
+  background: var(--accent-deep);
+}
+.pack-bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  box-shadow: var(--glow);
+}
+.status-chip.offline {
+  color: var(--amber);
+}

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { ConnectedMiniPlayer } from '../screens/Listen'
+import { UpdatePrompt } from './UpdatePrompt'
 import { initAmbient } from './ambientController'
 import { DriveModeOverlay } from '../screens/DriveMode'
 import { Onboarding } from '../screens/Onboarding'
@@ -66,6 +67,7 @@ export function AppShell() {
         </div>
       )}
       <ToastHost />
+      <UpdatePrompt />
       {!onboarded && <Onboarding />}
     </div>
   )

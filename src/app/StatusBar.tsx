@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { es } from '../i18n/es'
 import { useAudioStore } from '../state/audioStore'
+import { usePwaStore } from '../state/pwaStore'
 import { useTelemetryStore } from '../state/telemetryStore'
+import { esPwa } from '../i18n/es'
 
 function useClock() {
   const [now, setNow] = useState(() => new Date())
@@ -16,6 +18,7 @@ export function StatusBar() {
   const now = useClock()
   const { speedMs, quality, running, source } = useTelemetryStore()
   const audio = useAudioStore()
+  const online = usePwaStore((s) => s.online)
 
   // P/D is inferred from speed: the app never reads the vehicle.
   const driving = speedMs * 3.6 > 1
@@ -55,6 +58,7 @@ export function StatusBar() {
         </span>
       </div>
       <div className="status-right">
+        {!online && <span className="status-chip offline">{esPwa.offline}</span>}
         <time>{now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}</time>
       </div>
     </header>

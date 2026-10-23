@@ -179,3 +179,23 @@ for (const c of collections) {
   catalog.collections.push({ id: c.id, title: c.title, artist: c.artist, genre: c.genre, year: c.year, cover: c.cover, tracks })
 }
 writeFileSync('public/sounds/ambient/catalog.json', JSON.stringify(catalog, null, 2))
+
+// ---- download packs manifest (sizes in bytes) ----
+import { statSync } from 'node:fs'
+const packs = catalog.collections.map((c) => {
+  const files = c.tracks.map((t) => {
+    const url = `/sounds/ambient/${c.id}/${t.file}`
+    return { url, bytes: statSync(`public${url}`).size }
+  })
+  return {
+    id: `ambient-${c.id}`,
+    kind: 'ambient',
+    title: c.title,
+    bytes: files.reduce((s, f) => s + f.bytes, 0),
+    // small JSON the UI needs to browse/play the pack offline
+    extras: ['/sounds/ambient/catalog.json'],
+    files,
+  }
+})
+writeFileSync('public/sounds/packs.json', JSON.stringify({ version: 1, packs }, null, 2))
+console.log('packs.json', packs.map((p) => `${p.id} ${(p.bytes / 1e6).toFixed(1)} MB`).join(', '))
