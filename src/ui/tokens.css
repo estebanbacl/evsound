@@ -1,0 +1,54 @@
+:root {
+  color-scheme: dark;
+  --bg: #050505;
+  --bg-2: #0b0b0d;
+  --accent: #ff2a2a;
+  --accent-deep: #3a0a0a;
+  --accent-dim: #8a2b2b;
+  --amber: #ff9f43;
+  --text: #ffd9d9;
+  --text-2: #8a2b2b;
+  --glow: 0 0 12px rgb(255 42 42 / 45%);
+  --glow-strong: 0 0 22px rgb(255 42 42 / 70%);
+  --radius: 4px;
+  --border: 1px solid var(--accent);
+  --border-dim: 1px solid rgb(255 42 42 / 35%);
+  --touch: 48px;
+  --touch-drive: 64px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 40px;
+  --font-display: 'Orbitron', 'Michroma', system-ui, sans-serif;
+  --font-text: 'Rajdhani', 'Inter', system-ui, sans-serif;
+  --nav-h: 76px;
+  --status-h: 40px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: 18px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
