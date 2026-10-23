@@ -253,7 +253,7 @@ Fases 3 y 4 pueden correr en paralelo a 1–2 (p. ej. en otra worktree de Claude
 |---|---|---|---|
 | Sprint 0 | ☐ | | |
 | 0 | ☑ | 2026-10-23 | Vite 8 + React 19 + TS strict, ESLint flat, Vitest, Playwright (car 1920x1200, small 1280x720); check y e2e en verde |
-| 1 | ☐ | | |
+| 1 | ☑ | 2026-10-23 | Kalman + extrapolación 60 Hz, fuentes GPS/Sim/Traza, recorder, trazas, /dev/telemetry; cobertura telemetry >90 % |
 | 2 | ☐ | | |
 | 3 | ☐ | | |
 | 4 | ☐ | | |
