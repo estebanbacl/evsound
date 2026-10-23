@@ -8,7 +8,10 @@ describe('Gearbox', () => {
   it('idles in first gear below 3 km/h', () => {
     const g = mk()
     const s = g.update(kmh(2), 0, 0.016)
-    expect(s).toMatchObject({ gear: 1, rpm: v8Americano.idleRpm, idle: true })
+    expect(s).toMatchObject({ gear: 1, idle: true })
+    expect(s.rpm).toBeGreaterThanOrEqual(v8Americano.idleRpm)
+    expect(s.rpm).toBeLessThan(v8Americano.idleRpm + 400)
+    expect(g.update(0, 0, 0.016).rpm).toBe(v8Americano.idleRpm)
   })
 
   it('rpm rises linearly with speed within a gear and reaches redline in top gear at max speed', () => {

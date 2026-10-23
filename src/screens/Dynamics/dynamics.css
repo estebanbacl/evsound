@@ -75,7 +75,7 @@ div.preset-card {
 .big-btn.is-ghost {
   background: transparent;
   box-shadow: none;
-  border-color: var(--accent-dim);
+  border-color: var(--line-dim);
   color: var(--accent);
 }
 .big-btn.is-warn {

@@ -251,7 +251,7 @@ Fases 3 y 4 pueden correr en paralelo a 1–2 (p. ej. en otra worktree de Claude
 ## Progreso
 | Fase | Estado | Fecha | Notas |
 |---|---|---|---|
-| Sprint 0 | ☐ | | |
+| Sprint 0 | 🟡 | 2026-10-23 | Página `public/diagnostics/index.html` lista y con e2e. **Prueba física en el auto pendiente (gate P2)**: ver docs/field-test-checklist.md |
 | 0 | ☑ | 2026-10-23 | Vite 8 + React 19 + TS strict, ESLint flat, Vitest, Playwright (car 1920x1200, small 1280x720); check y e2e en verde |
 | 1 | ☑ | 2026-10-23 | Kalman + extrapolación 60 Hz, fuentes GPS/Sim/Traza, recorder, trazas, /dev/telemetry; cobertura telemetry >90 % |
 | 2 | ☑ | 2026-10-23 | AudioEngine, Gearbox, EngineModel, SynthVoice, EngineVoice, 4 perfiles, EngineDriver, /dev/audio; e2e verifica señal en analyser. Pendiente humano: escucha subjetiva y 10 min sin glitches en dispositivo real |
@@ -260,4 +260,4 @@ Fases 3 y 4 pueden correr en paralelo a 1–2 (p. ej. en otra worktree de Claude
 | 5 | ☑ | 2026-10-23 | Dynamics (presets sonido, perfil, fuente GPS/Sim/Traza, sliders, tacómetro, onda en vivo, pedales virtuales, vista previa 2 s), DriveModeDetector + overlay (>=64 px, sin scroll, fondo y 3D pausados), e2e de tiempos 3 s/5 s con reloj falso |
 | 6 | ☑ | 2026-10-23 | AmbientPlayer (HTMLAudioElement→grafo compartido, ducking/pausa con motor), 2 colecciones sintetizadas por script (10 pistas WAV), portadas SVG generadas, home + detalle, MiniPlayer global con seek, Media Session; e2e con reproducción real. Pendiente humano: escucha subjetiva de pistas |
 | 7 | ☑ | 2026-10-23 | vite-plugin-pwa (injectManifest): precache shell, CacheFirst+Range para /sounds y /models (cachés versionadas), SWR para JSON, packManager (descarga con progreso, reanuda, elimina, estimate), UI "Sonidos descargados", aviso de actualización (no en conducción), chip sin conexión, offline.html, iconos propios. e2e: instalable (CDP) + offline con pack descargado. Lighthouse desktop: perf 97 / a11y 100 / BP 100 (la categoría PWA ya no existe en LH12) |
-| 8 | ☐ | | |
+| 8 | ☑ | 2026-10-23 | Revisión SPEC §4/§10 (docs/REVISION_FASE8.md), panel de diagnóstico (5 toques en la hora), ErrorBoundary + log exportable, vercel.json, checklist de campo, README, soak test, contraste AA, privacidad e2e. Quedan pruebas físicas, despliegue en Vercel y assets finales (3D, samples) |

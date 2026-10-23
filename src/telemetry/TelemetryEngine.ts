@@ -1,5 +1,6 @@
 import { useTelemetryStore } from '../state/telemetryStore'
 import { KalmanEstimator } from './KalmanEstimator'
+import { OutputSmoother } from './OutputSmoother'
 import { SessionRecorder } from './SessionRecorder'
 import type { SpeedSource, TelemetrySample } from './types'
 
@@ -16,8 +17,6 @@ export interface EngineDeps {
 }
 
 const HISTORY_MS = 60_000
-/** Output smoothing time constant (s): hides the correction step at each 1 Hz measurement. */
-const OUT_TAU = 0.2
 
 /**
  * Connects a SpeedSource to the Kalman filter and publishes the extrapolated estimate to
@@ -29,8 +28,7 @@ export class TelemetryEngine {
   readonly rawHistory: HistoryPoint[] = []
   readonly estHistory: HistoryPoint[] = []
   private source: SpeedSource | null = null
-  private outV = 0
-  private lastTickT: number | null = null
+  private smoother = new OutputSmoother()
   private rafId: number | null = null
   private now: () => number
   private raf: (cb: (t: number) => void) => number
@@ -47,8 +45,7 @@ export class TelemetryEngine {
     this.stop()
     this.source = source
     this.estimator.reset()
-    this.outV = 0
-    this.lastTickT = null
+    this.smoother.reset()
     this.rawHistory.length = 0
     this.estHistory.length = 0
     useTelemetryStore.getState().reset()
@@ -81,13 +78,10 @@ export class TelemetryEngine {
   /** One frame of the 60 Hz loop. Exposed for tests. */
   tick(t: number) {
     const e = this.estimator.estimateAt(t)
-    const dt = this.lastTickT === null ? Infinity : Math.max(0, (t - this.lastTickT) / 1000)
-    this.lastTickT = t
-    this.outV += (e.speedMs - this.outV) * (1 - Math.exp(-dt / OUT_TAU))
-    if (e.speedMs === 0 && this.outV < 0.05) this.outV = 0
-    useTelemetryStore.getState().setEstimate(this.outV, e.accelMs2)
-    this.recorder.addEstimate(t, this.outV, e.accelMs2)
-    this.push(this.estHistory, t, this.outV)
+    const v = this.smoother.step(e.speedMs, t)
+    useTelemetryStore.getState().setEstimate(v, e.accelMs2)
+    this.recorder.addEstimate(t, v, e.accelMs2)
+    this.push(this.estHistory, t, v)
   }
 
   private push(arr: HistoryPoint[], t: number, v: number) {

@@ -66,7 +66,7 @@ export class Gearbox {
   }
 
   update(speedMs: number, load: number, dtS: number): GearboxState {
-    const { gears, idleRpm, shiftDurationS, minShiftIntervalS } = this.cfg
+    const { gears, shiftDurationS, minShiftIntervalS } = this.cfg
     const shiftDownRpm = this.cfg.shiftDownRpm + this.shiftBiasRpm * 0.5
     this.sinceShift += dtS
     this.dipT = Math.max(0, this.dipT - dtS)
@@ -103,7 +103,8 @@ export class Gearbox {
     const shiftDip = this.dipT > 0 ? Math.sin(Math.PI * (1 - this.dipT / shiftDurationS)) : 0
     return {
       gear: this.gear,
-      rpm: idle ? idleRpm : this.rpmIn(this.g, speedMs),
+      // continuous with the idle→first-gear transition (no rpm step when pulling away)
+      rpm: this.rpmIn(this.g, speedMs),
       shiftDip,
       shifted,
       idle,

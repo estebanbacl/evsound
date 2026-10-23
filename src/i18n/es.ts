@@ -83,6 +83,10 @@ export const esDynamics = {
   load: 'Carga',
   wave: 'Forma de onda',
   tapToResume: 'Audio en pausa: toca para reanudar',
+  record: 'Grabar sesión de velocidad',
+  recordStop: 'Detener y exportar sesión',
+  recordHint:
+    'La grabación es opcional, queda solo en este dispositivo y se exporta como JSON para calibrar.',
   parkOnly: 'Configura en Park. Con el vehículo en marcha se activa el Modo Conducción.',
 } as const
 

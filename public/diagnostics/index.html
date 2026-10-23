@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EV Sound Studio · Diagnóstico de campo (Sprint 0)</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; padding: 24px 32px; background: #050505; color: #ffd9d9; font: 22px/1.4 system-ui, sans-serif; }
+  h1 { font-size: 30px; color: #ff2a2a; margin: 0 0 4px; font-weight: 500; letter-spacing: .05em; }
+  h2 { font-size: 22px; color: #ff6a6a; margin: 24px 0 8px; font-weight: 500; }
+  p.note { color: #d98a8a; margin: 0 0 12px; font-size: 18px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
+  .card { border: 1px solid #8a2b2b; border-radius: 4px; padding: 12px 16px; background: #14090a; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; color: #d98a8a; font-weight: 400; width: 40%; padding: 3px 0; vertical-align: top; }
+  td { padding: 3px 0; word-break: break-all; }
+  button { min-height: 64px; padding: 0 28px; font-size: 22px; background: #3a0a0a; color: #ffd9d9; border: 1px solid #ff2a2a; border-radius: 4px; margin: 0 12px 12px 0; }
+  .ok { color: #7dff9a; } .bad { color: #ff7a7a; } .warn { color: #ffb347; }
+  pre { background: #000; border: 1px solid #5a1a1a; padding: 12px; max-height: 260px; overflow: auto; font-size: 15px; white-space: pre-wrap; user-select: text; }
+  #samples { max-height: 220px; overflow: auto; font: 16px/1.3 ui-monospace, monospace; background: #000; border: 1px solid #5a1a1a; padding: 8px; }
+</style>
+</head>
+<body>
+<h1>Diagnóstico de campo</h1>
+<p class="note">Sprint 0 · Página autónoma, sin dependencias, no envía datos a ningún servidor. Sigue el protocolo P1–P6 de docs/field-test-checklist.md.</p>
+
+<div class="grid">
+  <section class="card"><h2 style="margin-top:0">1 · Entorno</h2><table id="env"></table></section>
+  <section class="card"><h2 style="margin-top:0">5 · Soporte de APIs</h2><table id="features"></table></section>
+</div>
+
+<h2>2 · Audio (tono de 220 Hz)</h2>
+<button id="audioBtn">Iniciar audio</button><button id="audioStop" disabled>Detener tono</button>
+<table class="card" id="audio"><tr><th>AudioContext.state</th><td id="a-state">no iniciado</td></tr><tr><th>baseLatency</th><td id="a-base">--</td></tr><tr><th>outputLatency</th><td id="a-out">--</td></tr></table>
+
+<h2>3 · Geolocalización</h2>
+<button id="gpsBtn">Iniciar GPS</button><button id="gpsStop" disabled>Detener GPS</button>
+<table class="card"><tr><th>Muestras</th><td id="g-n">0</td></tr><tr><th>coords.speed</th><td id="g-speed">--</td></tr><tr><th>accuracy</th><td id="g-acc">--</td></tr><tr><th>Intervalo</th><td id="g-int">--</td></tr><tr><th>Frecuencia media</th><td id="g-hz">--</td></tr><tr><th>speed nulo</th><td id="g-null">0</td></tr></table>
+<div id="samples" aria-label="Muestras GPS"></div>
+
+<h2>4 · Eventos del ciclo de vida</h2>
+<pre id="events">(esperando eventos…)</pre>
+
+<h2>6 · Log</h2>
+<button id="exportBtn">Exportar log (JSON)</button><button id="copyBtn">Copiar al portapapeles</button>
+<pre id="log" contenteditable="true" spellcheck="false"></pre>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var t0 = performance.now();
+  var LOG = { startedAt: new Date().toISOString(), env: {}, features: {}, audio: [], gps: [], events: [] };
+
+  function stamp() { return ((performance.now() - t0) / 1000).toFixed(2) + 's'; }
+  function event(name, data) {
+    var e = { t: stamp(), at: new Date().toISOString(), name: name, data: data === undefined ? null : data };
+    LOG.events.push(e);
+    var line = e.t + '  ' + name + (data !== undefined ? '  ' + JSON.stringify(data) : '');
+    var pre = $('events');
+    pre.textContent = (LOG.events.length === 1 ? '' : pre.textContent + '\n') + line;
+    pre.scrollTop = pre.scrollHeight;
+    refreshLog();
+  }
+  function refreshLog() { $('log').textContent = JSON.stringify(LOG, null, 2); }
+  function rows(tableId, list) {
+    $(tableId).innerHTML = list.map(function (r) { return '<tr><th>' + r[0] + '</th><td class="' + (r[2] || '') + '">' + r[1] + '</td></tr>'; }).join('');
+  }
+
+  // 1 · entorno
+  var ua = navigator.userAgent;
+  var chromium = (/Chrom(?:e|ium)\/([\d.]+)/.exec(ua) || [])[1] || 'no detectado';
+  LOG.env = { userAgent: ua, chromium: chromium, screen: screen.width + 'x' + screen.height, viewport: innerWidth + 'x' + innerHeight, devicePixelRatio: devicePixelRatio, language: navigator.language, online: navigator.onLine, tesla: /tesla\//i.test(ua) };
+  rows('env', [['User agent', ua], ['Chromium', chromium], ['Pantalla', LOG.env.screen], ['Viewport', LOG.env.viewport], ['devicePixelRatio', devicePixelRatio], ['Navegador de Tesla', LOG.env.tesla ? 'sí (UA contiene Tesla/)' : 'no']]);
+
+  // 5 · soporte
+  var webgl2 = false; try { webgl2 = !!document.createElement('canvas').getContext('webgl2'); } catch (e) {}
+  var feats = [
+    ['AudioContext', !!(window.AudioContext || window.webkitAudioContext)],
+    ['Geolocation', 'geolocation' in navigator],
+    ['DeviceMotionEvent', 'DeviceMotionEvent' in window],
+    ['Service Worker', 'serviceWorker' in navigator],
+    ['Cache Storage', 'caches' in window],
+    ['navigator.storage.estimate', !!(navigator.storage && navigator.storage.estimate)],
+    ['Media Session', 'mediaSession' in navigator],
+    ['Wake Lock', 'wakeLock' in navigator],
+    ['WebGL2', webgl2]
+  ];
+  feats.forEach(function (f) { LOG.features[f[0]] = f[1]; });
+  rows('features', feats.map(function (f) { return [f[0], f[1] ? 'sí' : 'NO', f[1] ? 'ok' : 'bad']; }));
+  if (navigator.storage && navigator.storage.estimate) {
+    navigator.storage.estimate().then(function (e) { LOG.features.storage = { usage: e.usage, quota: e.quota }; refreshLog(); });
+  }
+
+  // 2 · audio
+  var ctx = null, osc = null, gain = null, audioTimer = null;
+  function audioReadout() {
+    if (!ctx) return;
+    $('a-state').textContent = ctx.state;
+    $('a-state').className = ctx.state === 'running' ? 'ok' : 'warn';
+    $('a-base').textContent = (ctx.baseLatency * 1000).toFixed(1) + ' ms';
+    $('a-out').textContent = ('outputLatency' in ctx ? (ctx.outputLatency * 1000).toFixed(1) + ' ms' : 'no disponible');
+  }
+  $('audioBtn').addEventListener('click', function () {
+    try {
+      if (!ctx) {
+        ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+        ctx.addEventListener('statechange', function () { event('audiocontext.statechange', ctx.state); audioReadout(); });
+      }
+      ctx.resume().then(function () {
+        osc = ctx.createOscillator(); gain = ctx.createGain();
+        osc.frequency.value = 220; gain.gain.value = 0.15;
+        osc.connect(gain); gain.connect(ctx.destination); osc.start();
+        $('audioStop').disabled = false;
+        event('audio.started', { state: ctx.state, baseLatencyMs: ctx.baseLatency * 1000, outputLatencyMs: ctx.outputLatency * 1000 });
+        audioReadout();
+        clearInterval(audioTimer);
+        audioTimer = setInterval(function () { audioReadout(); LOG.audio.push({ t: stamp(), state: ctx.state }); if (LOG.audio.length > 600) LOG.audio.shift(); }, 1000);
+      });
+    } catch (e) { event('audio.error', String(e)); }
+  });
+  $('audioStop').addEventListener('click', function () {
+    if (osc) { osc.stop(); osc = null; }
+    $('audioStop').disabled = true;
+    event('audio.stopped');
+  });
+
+  // 3 · geolocalización
+  var watchId = null, lastT = null, n = 0, nullSpeeds = 0, firstT = null;
+  $('gpsBtn').addEventListener('click', function () {
+    if (!navigator.geolocation) { event('gps.unsupported'); return; }
+    watchId = navigator.geolocation.watchPosition(function (p) {
+      var now = performance.now();
+      var interval = lastT === null ? null : (now - lastT) / 1000;
+      lastT = now; if (firstT === null) firstT = now; n++;
+      if (p.coords.speed === null) nullSpeeds++;
+      var s = { t: stamp(), ts: p.timestamp, speed: p.coords.speed, accuracy: p.coords.accuracy, lat: p.coords.latitude, lon: p.coords.longitude, intervalS: interval };
+      LOG.gps.push(s); if (LOG.gps.length > 3000) LOG.gps.shift();
+      $('g-n').textContent = n;
+      $('g-speed').textContent = p.coords.speed === null ? 'null' : (p.coords.speed * 3.6).toFixed(1) + ' km/h (' + p.coords.speed.toFixed(2) + ' m/s)';
+      $('g-acc').textContent = p.coords.accuracy.toFixed(0) + ' m';
+      $('g-int').textContent = interval === null ? '--' : interval.toFixed(2) + ' s';
+      $('g-hz').textContent = n > 1 ? ((n - 1) / ((now - firstT) / 1000)).toFixed(2) + ' Hz' : '--';
+      $('g-null').textContent = nullSpeeds;
+      var line = document.createElement('div');
+      line.textContent = s.t + '  v=' + (p.coords.speed === null ? 'null' : p.coords.speed.toFixed(2)) + ' acc=' + p.coords.accuracy.toFixed(0) + ' dt=' + (interval === null ? '-' : interval.toFixed(2));
+      $('samples').insertBefore(line, $('samples').firstChild);
+      while ($('samples').childNodes.length > 60) $('samples').removeChild($('samples').lastChild);
+      refreshLog();
+    }, function (err) { event('gps.error', { code: err.code, message: err.message }); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 });
+    $('gpsStop').disabled = false;
+    event('gps.started');
+  });
+  $('gpsStop').addEventListener('click', function () {
+    if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+    watchId = null; $('gpsStop').disabled = true; event('gps.stopped');
+  });
+
+  // 4 · ciclo de vida
+  document.addEventListener('visibilitychange', function () { event('visibilitychange', document.visibilityState); });
+  window.addEventListener('pagehide', function (e) { event('pagehide', { persisted: e.persisted }); });
+  window.addEventListener('pageshow', function (e) { event('pageshow', { persisted: e.persisted }); });
+  document.addEventListener('freeze', function () { event('freeze'); });
+  document.addEventListener('resume', function () { event('resume'); });
+  window.addEventListener('online', function () { event('online'); });
+  window.addEventListener('offline', function () { event('offline'); });
+  window.addEventListener('resize', function () { event('resize', innerWidth + 'x' + innerHeight); });
+
+  // 6 · exportar
+  $('exportBtn').addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify(LOG, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'ev-field-diagnostics-' + Date.now() + '.json'; a.click();
+    event('log.exported');
+  });
+  $('copyBtn').addEventListener('click', function () {
+    var text = JSON.stringify(LOG, null, 2);
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { event('log.copied'); }, function () { event('log.copy-failed'); });
+    else { var r = document.createRange(); r.selectNodeContents($('log')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); event('log.selected'); }
+  });
+
+  event('page.loaded', { visibility: document.visibilityState });
+})();
+</script>
+</body>
+</html>

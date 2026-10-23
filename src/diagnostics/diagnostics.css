@@ -1,0 +1,53 @@
+.diag {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: grid;
+  place-items: center;
+  background: rgb(5 5 5 / 92%);
+}
+.diag-card {
+  width: min(1000px, 94vw);
+  padding: var(--space-4);
+  background: rgb(30 4 4 / 85%);
+  border: var(--border);
+  border-radius: var(--radius);
+}
+.diag h2 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+.diag table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 17px;
+}
+.diag th {
+  text-align: left;
+  width: 260px;
+  color: var(--accent-dim);
+  font-weight: 500;
+  padding: 6px 0;
+  vertical-align: top;
+}
+.diag td {
+  padding: 6px 0;
+  word-break: break-word;
+}
+.diag-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+.diag-actions button {
+  min-height: var(--touch);
+  padding: 0 var(--space-4);
+  background: rgb(255 42 42 / 18%);
+  border: var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 18px;
+}

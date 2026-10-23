@@ -26,6 +26,8 @@ import { Panel } from '../../ui/components/Panel'
 import { SegmentedControl } from '../../ui/components/SegmentedControl'
 import { Slider } from '../../ui/components/Slider'
 import { PacksPanel } from '../../app/PacksPanel'
+import { downloadJson } from '../../diagnostics/download'
+import { telemetry } from '../../telemetry'
 import { Waveform } from './Waveform'
 import './dynamics.css'
 
@@ -72,11 +74,23 @@ export function DynamicsScreen() {
   const audio = useAudioStore()
   const speedMs = useTelemetryStore((s) => s.speedMs)
   const [, setTick] = useState(0)
+  const [recording, setRecording] = useState(false)
 
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 100)
     return () => clearInterval(id)
   }, [])
+
+  const toggleRecording = () => {
+    if (telemetry.recorder.recording) {
+      telemetry.recorder.stop()
+      downloadJson(`telemetry-${Date.now()}.json`, telemetry.recorder.exportJson())
+      setRecording(false)
+    } else {
+      telemetry.recorder.start()
+      setRecording(true)
+    }
+  }
 
   const frame = engineDriver.frame
   const profile = soundProfiles.find((p) => p.id === settings.profileId) ?? soundProfiles[0]
@@ -190,6 +204,10 @@ export function DynamicsScreen() {
           </button>
         )}
         <p className="dyn-note">{t.parkOnly}</p>
+        <button className="big-btn is-ghost" aria-pressed={recording} onClick={toggleRecording}>
+          {recording ? t.recordStop : t.record}
+        </button>
+        <p className="dyn-note">{t.recordHint}</p>
         <PacksPanel />
       </div>
 

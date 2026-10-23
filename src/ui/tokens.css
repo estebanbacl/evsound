@@ -4,10 +4,12 @@
   --bg-2: #0b0b0d;
   --accent: #ff2a2a;
   --accent-deep: #3a0a0a;
-  --accent-dim: #8a2b2b;
+  /* Secondary text. SPEC §8 suggests #8A2B2B, but that is only 2.4:1 on the dark surfaces and
+     RNF-6 requires AA (4.5:1), so text uses this lighter tone and #8A2B2B is kept for strokes. */
+  --accent-dim: #c97070;
+  --line-dim: #8a2b2b;
   --amber: #ff9f43;
   --text: #ffd9d9;
-  --text-2: #8a2b2b;
   --glow: 0 0 12px rgb(255 42 42 / 45%);
   --glow-strong: 0 0 22px rgb(255 42 42 / 70%);
   --radius: 4px;

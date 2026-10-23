@@ -150,7 +150,7 @@
 .ev-iconbtn.is-active {
   color: var(--text);
   text-shadow: var(--glow-strong);
-  border-color: var(--accent-dim);
+  border-color: var(--line-dim);
 }
 .ev-iconbtn:active {
   background: rgb(255 42 42 / 25%);
@@ -182,7 +182,7 @@
   filter: drop-shadow(0 0 6px rgb(255 42 42 / 80%));
 }
 .ev-gauge-tick {
-  stroke: var(--accent-dim);
+  stroke: var(--line-dim);
   stroke-width: 2;
 }
 .ev-gauge-num {

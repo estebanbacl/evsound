@@ -4,6 +4,8 @@ import { useAudioStore } from '../state/audioStore'
 import { usePwaStore } from '../state/pwaStore'
 import { useTelemetryStore } from '../state/telemetryStore'
 import { esPwa } from '../i18n/es'
+import { DiagnosticsPanel } from '../diagnostics/DiagnosticsPanel'
+import { useTapSequence } from '../diagnostics/useTapSequence'
 
 function useClock() {
   const [now, setNow] = useState(() => new Date())
@@ -19,6 +21,8 @@ export function StatusBar() {
   const { speedMs, quality, running, source } = useTelemetryStore()
   const audio = useAudioStore()
   const online = usePwaStore((s) => s.online)
+  const [diag, setDiag] = useState(false)
+  const onTimeTap = useTapSequence(5, 3000, () => setDiag(true))
 
   // P/D is inferred from speed: the app never reads the vehicle.
   const driving = speedMs * 3.6 > 1
@@ -59,8 +63,11 @@ export function StatusBar() {
       </div>
       <div className="status-right">
         {!online && <span className="status-chip offline">{esPwa.offline}</span>}
-        <time>{now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}</time>
+        <time onClick={onTimeTap}>
+          {now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
+        </time>
       </div>
+      {diag && <DiagnosticsPanel onClose={() => setDiag(false)} />}
     </header>
   )
 }
