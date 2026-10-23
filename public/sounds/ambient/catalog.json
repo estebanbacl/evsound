@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "collections": [
+    {
+      "id": "orbita",
+      "title": "Órbita",
+      "artist": "EV Sound Studio",
+      "genre": "Ambiental",
+      "year": 2026,
+      "cover": {
+        "style": "orbit",
+        "hue": 2,
+        "seed": 7
+      },
+      "tracks": [
+        {
+          "id": "orbita-1",
+          "title": "Perigeo",
+          "file": "01-perigeo.wav",
+          "durationS": 32
+        },
+        {
+          "id": "orbita-2",
+          "title": "Horizonte lento",
+          "file": "02-horizonte-lento.wav",
+          "durationS": 34
+        },
+        {
+          "id": "orbita-3",
+          "title": "Cinturón de polvo",
+          "file": "03-cinturon-de-polvo.wav",
+          "durationS": 30
+        },
+        {
+          "id": "orbita-4",
+          "title": "Luz del apogeo",
+          "file": "04-luz-del-apogeo.wav",
+          "durationS": 33
+        },
+        {
+          "id": "orbita-5",
+          "title": "Aterrizaje suave",
+          "file": "05-aterrizaje-suave.wav",
+          "durationS": 36
+        }
+      ]
+    },
+    {
+      "id": "lluvia-en-cabina",
+      "title": "Lluvia en cabina",
+      "artist": "EV Sound Studio",
+      "genre": "Naturaleza",
+      "year": 2026,
+      "cover": {
+        "style": "rain",
+        "hue": 355,
+        "seed": 21
+      },
+      "tracks": [
+        {
+          "id": "lluvia-en-cabina-1",
+          "title": "Gotas en el techo",
+          "file": "01-gotas-en-el-techo.wav",
+          "durationS": 31
+        },
+        {
+          "id": "lluvia-en-cabina-2",
+          "title": "Lluvia ligera",
+          "file": "02-lluvia-ligera.wav",
+          "durationS": 30
+        },
+        {
+          "id": "lluvia-en-cabina-3",
+          "title": "Tormenta lejana",
+          "file": "03-tormenta-lejana.wav",
+          "durationS": 34
+        },
+        {
+          "id": "lluvia-en-cabina-4",
+          "title": "Parabrisas",
+          "file": "04-parabrisas.wav",
+          "durationS": 32
+        },
+        {
+          "id": "lluvia-en-cabina-5",
+          "title": "Cabina cálida",
+          "file": "05-cabina-calida.wav",
+          "durationS": 35
+        }
+      ]
+    }
+  ]
+}

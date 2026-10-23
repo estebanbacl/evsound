@@ -53,6 +53,11 @@ export function MiniPlayer(p: MiniPlayerProps) {
       </div>
       <div
         className="ev-mp-progress"
+        onClick={(e) => {
+          if (!p.onSeek || p.durationS <= 0) return
+          const r = e.currentTarget.getBoundingClientRect()
+          p.onSeek(((e.clientX - r.left) / r.width) * p.durationS)
+        }}
         role="progressbar"
         aria-valuemin={0}
         aria-valuemax={100}

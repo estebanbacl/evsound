@@ -1,7 +1,3 @@
-export function ListenScreen() {
-  return (
-    <section className="screen-placeholder" aria-label="Listen">
-      <h1>LISTEN</h1>
-    </section>
-  )
-}
+export { ListenHome } from './ListenHome'
+export { CollectionDetail } from './CollectionDetail'
+export { ConnectedMiniPlayer } from './ConnectedMiniPlayer'

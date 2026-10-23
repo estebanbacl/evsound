@@ -93,3 +93,23 @@ export const esDrive = {
   volumeDown: 'Bajar volumen',
   stop: 'Detener',
 } as const
+
+export const esListen = {
+  title: 'Paisajes sonoros',
+  last: 'Último escuchado',
+  recent: 'Reproducido recientemente',
+  forYou: 'Para ti',
+  nothingYet: 'Aún no has escuchado nada.',
+  tracks: 'pistas',
+  open: 'Abrir',
+  play: 'Reproducir',
+  back: 'Volver',
+  playCollection: 'Reproducir colección',
+  pauseCollection: 'Pausar colección',
+  notFound: 'Colección no encontrada.',
+  loadError: 'No se pudo cargar la biblioteca de sonidos.',
+  retry: 'Reintentar',
+  withEngine: 'Con el motor activo',
+  duck: 'Atenuar',
+  pause: 'Pausar',
+} as const

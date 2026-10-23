@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import { ConnectedMiniPlayer } from '../screens/Listen'
+import { initAmbient } from './ambientController'
 import { DriveModeOverlay } from '../screens/DriveMode'
 import { Onboarding } from '../screens/Onboarding'
 import { useDriveStore } from '../state/driveStore'
@@ -49,6 +51,7 @@ export function AppShell() {
   const onboarded = useVehicleStore((s) => s.onboarded)
   const driving = useDriveStore((s) => s.active)
   useDriveMode()
+  useEffect(() => initAmbient(), [])
   return (
     <div className="shell">
       <StatusBar />
@@ -58,6 +61,7 @@ export function AppShell() {
       </main>
       {!driving && (
         <div className="bottom-bar">
+          <ConnectedMiniPlayer />
           <BottomNav />
         </div>
       )}

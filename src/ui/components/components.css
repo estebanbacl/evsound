@@ -310,3 +310,13 @@
   z-index: 0;
   pointer-events: none;
 }
+
+.ev-mp-progress {
+  position: relative;
+  cursor: pointer;
+}
+.ev-mp-progress::before {
+  content: '';
+  position: absolute;
+  inset: -12px 0; /* generous touch target around a 3 px bar */
+}

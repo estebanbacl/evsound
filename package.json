@@ -14,7 +14,8 @@
     "check": "tsc -b --noEmit && eslint . && vitest run",
     "format": "prettier --write .",
     "traces": "node scripts/generate-traces.mjs",
-    "shots": "SHOTS=1 playwright test screenshots"
+    "shots": "SHOTS=1 playwright test screenshots",
+    "ambient": "node scripts/generate-ambient.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.8.2",

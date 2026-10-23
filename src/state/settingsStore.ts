@@ -14,6 +14,9 @@ interface SettingsState {
   character: number
   shiftBias: number
   preset: SoundPreset
+  /** What ambient playback does while the engine sound runs. */
+  ambientMode: 'duck' | 'pause'
+  setAmbientMode: (m: 'duck' | 'pause') => void
   setProfile: (id: string) => void
   cycleProfile: (dir: 1 | -1) => void
   setVolume: (v: number) => void
@@ -33,6 +36,8 @@ export const useSettingsStore = create<SettingsState>()(
       character: soundPresets.balanced.character,
       shiftBias: soundPresets.balanced.shiftBias,
       preset: 'balanced',
+      ambientMode: 'duck',
+      setAmbientMode: (ambientMode) => set({ ambientMode }),
       setProfile: (profileId) => set({ profileId }),
       cycleProfile: (dir) => {
         const i = soundProfiles.findIndex((p) => p.id === get().profileId)
