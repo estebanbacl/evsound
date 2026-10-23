@@ -1,0 +1,51 @@
+.drive {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  overflow: hidden;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+.drive-center {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-3);
+}
+.drive-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+}
+.drive-profile,
+.drive-stop {
+  min-height: var(--touch-drive);
+  min-width: 220px;
+  padding: 0 var(--space-4);
+  background: rgb(255 42 42 / 14%);
+  border: var(--border);
+  border-radius: var(--radius);
+  font-size: 24px;
+  color: var(--text);
+}
+.drive-profile {
+  justify-self: start;
+}
+.drive-stop {
+  justify-self: end;
+  box-shadow: var(--glow);
+}
+.drive-volume {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.drive-vol-level {
+  min-width: 64px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--accent);
+}

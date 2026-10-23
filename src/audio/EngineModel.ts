@@ -7,9 +7,11 @@ export interface EngineSettings {
   intensity: number
   /** -1 (deeper) .. 1 (higher) */
   character: number
+  /** rpm offset for shift points (presets: comfort < 0 < sport). */
+  shiftBias: number
 }
 
-export const defaultSettings: EngineSettings = { intensity: 1, character: 0 }
+export const defaultSettings: EngineSettings = { intensity: 1, character: 0, shiftBias: 0 }
 
 /** Pure: telemetry → engine frame (gear, rpm, load, level). No Web Audio. */
 export class EngineModel {
@@ -33,6 +35,7 @@ export class EngineModel {
   ): EngineFrame {
     // Lost signal: settle at a soft idle instead of freezing at a random rpm.
     const v = quality === 'lost' ? 0 : speedMs
+    this.gearbox.shiftBiasRpm = this.settings.shiftBias
     const load = Math.min(1, Math.max(0, accelMs2 / this.cal.accelRefMs2))
     const g = this.gearbox.update(v, load, dtS)
     const mix = loadMix(load, this.profile.fx)

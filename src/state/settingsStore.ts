@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
+import { soundPresets } from '../audio/presets'
 import { soundProfiles } from '../audio/profiles'
 import { safeStorage } from './safeStorage'
 
@@ -11,6 +12,7 @@ interface SettingsState {
   volume: number
   intensity: number
   character: number
+  shiftBias: number
   preset: SoundPreset
   setProfile: (id: string) => void
   cycleProfile: (dir: 1 | -1) => void
@@ -27,8 +29,9 @@ export const useSettingsStore = create<SettingsState>()(
     (set, get) => ({
       profileId: soundProfiles[0].id,
       volume: 0.5,
-      intensity: 0.8,
-      character: 0,
+      intensity: soundPresets.balanced.intensity,
+      character: soundPresets.balanced.character,
+      shiftBias: soundPresets.balanced.shiftBias,
       preset: 'balanced',
       setProfile: (profileId) => set({ profileId }),
       cycleProfile: (dir) => {
@@ -39,7 +42,11 @@ export const useSettingsStore = create<SettingsState>()(
       setVolume: (v) => set({ volume: clamp(v, 0, 1) }),
       setIntensity: (v) => set({ intensity: clamp(v, 0, 1), preset: 'custom' }),
       setCharacter: (v) => set({ character: clamp(v, -1, 1), preset: 'custom' }),
-      setPreset: (preset) => set({ preset }),
+      setPreset: (preset) => {
+        if (preset === 'custom') return set({ preset })
+        const { intensity, character, shiftBias } = soundPresets[preset]
+        set({ preset, intensity, character, shiftBias })
+      },
     }),
     { name: 'ev-settings', storage: createJSONStorage(() => safeStorage), version: 1 },
   ),

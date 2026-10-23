@@ -94,4 +94,18 @@ describe('Gearbox', () => {
     g.reset()
     expect(g.gear).toBe(1)
   })
+
+  it('shift bias moves the upshift point (comfort earlier, sport later)', () => {
+    const shiftRpm = (bias: number) => {
+      const g = mk()
+      g.shiftBiasRpm = bias
+      for (let v = 5; v < 100; v += 0.2) {
+        const before = g.rpmIn(0, kmh(v))
+        if (g.update(kmh(v), 0, 0.6).shifted === 'up') return before
+      }
+      return 0
+    }
+    expect(shiftRpm(-700)).toBeLessThan(shiftRpm(0))
+    expect(shiftRpm(800)).toBeGreaterThan(shiftRpm(0))
+  })
 })

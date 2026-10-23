@@ -29,6 +29,8 @@ export class Gearbox {
   private g = 0
   private sinceShift = Infinity
   private dipT = 0
+  /** rpm added to the upshift point (and half of it to the downshift point). */
+  shiftBiasRpm = 0
 
   constructor(cfg: GearboxConfig) {
     this.cfg = { minShiftIntervalS: 0.5, shiftDurationS: 0.3, ...cfg }
@@ -59,11 +61,13 @@ export class Gearbox {
   /** Higher load postpones the upshift towards redline (sporty feel). */
   upshiftRpm(load: number): number {
     const { shiftUpRpm, redlineRpm } = this.cfg
-    return shiftUpRpm + Math.min(1, Math.max(0, load)) * 0.6 * (redlineRpm - shiftUpRpm)
+    const base = Math.min(redlineRpm - 100, shiftUpRpm + this.shiftBiasRpm)
+    return base + Math.min(1, Math.max(0, load)) * 0.6 * (redlineRpm - base)
   }
 
   update(speedMs: number, load: number, dtS: number): GearboxState {
-    const { gears, idleRpm, shiftDownRpm, shiftDurationS, minShiftIntervalS } = this.cfg
+    const { gears, idleRpm, shiftDurationS, minShiftIntervalS } = this.cfg
+    const shiftDownRpm = this.cfg.shiftDownRpm + this.shiftBiasRpm * 0.5
     this.sinceShift += dtS
     this.dipT = Math.max(0, this.dipT - dtS)
 

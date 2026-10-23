@@ -55,3 +55,41 @@ export const esVehicle = {
     next: 'Vehículo siguiente',
   },
 } as const
+
+export const esDynamics = {
+  title: 'Dinámica de sonido',
+  soundOnly:
+    'Ajustes de sonido: no modifican la aceleración, suspensión ni ningún sistema del vehículo.',
+  presets: 'Presets de sonido',
+  select: 'Seleccionar',
+  active: 'Activo',
+  profile: 'Perfil de sonido',
+  source: 'Fuente de velocidad',
+  sources: { gps: 'GPS', sim: 'Simulador', trace: 'Traza' },
+  trace: 'Traza',
+  traces: { urban: 'Urbana', highway: 'Autopista', launch: '0–100' },
+  traceSpeed: 'Velocidad de traza',
+  volume: 'Volumen',
+  intensity: 'Intensidad',
+  character: 'Carácter',
+  start: 'Arrancar motor',
+  stop: 'Detener motor',
+  preview: 'Probar sonido (2 s)',
+  gas: 'Acelerador',
+  brake: 'Freno',
+  gasHint: 'Mantén pulsado',
+  rpm: 'RPM',
+  gear: 'Marcha',
+  load: 'Carga',
+  wave: 'Forma de onda',
+  tapToResume: 'Audio en pausa: toca para reanudar',
+  parkOnly: 'Configura en Park. Con el vehículo en marcha se activa el Modo Conducción.',
+} as const
+
+export const esDrive = {
+  region: 'Modo Conducción',
+  profile: 'Cambiar perfil de sonido',
+  volumeUp: 'Subir volumen',
+  volumeDown: 'Bajar volumen',
+  stop: 'Detener',
+} as const

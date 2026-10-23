@@ -1,6 +1,11 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import { DriveModeOverlay } from '../screens/DriveMode'
 import { Onboarding } from '../screens/Onboarding'
+import { useDriveStore } from '../state/driveStore'
+import { useSessionStore } from '../state/sessionStore'
+import { applyProfileChange } from './engineSession'
+import { useDriveMode } from './useDriveMode'
 import { useVehicle, useVehicleStore } from '../state/vehicleStore'
 import { audioEngine } from '../audio/AudioEngine'
 import { engineDriver } from '../audio/EngineDriver'
@@ -14,9 +19,16 @@ import { StatusBar } from './StatusBar'
 
 /** Keeps stores and the audio singletons in sync. */
 function useAudioSync() {
-  const { volume, intensity, character } = useSettingsStore()
+  const { volume, intensity, character, shiftBias } = useSettingsStore()
   useEffect(() => audioEngine.setVolume(volume), [volume])
-  useEffect(() => engineDriver.setSettings({ intensity, character }), [intensity, character])
+  useEffect(
+    () => engineDriver.setSettings({ intensity, character, shiftBias }),
+    [intensity, character, shiftBias],
+  )
+  const profileId = useSettingsStore((s) => s.profileId)
+  useEffect(() => {
+    if (useSessionStore.getState().running) void applyProfileChange()
+  }, [profileId])
   const vehicle = useVehicle()
   useEffect(() => engineDriver.setCalibration(vehicle.calibration), [vehicle])
   useEffect(() => {
@@ -35,16 +47,20 @@ export function AppShell() {
   useAudioSync()
   const speedMs = useTelemetryStore((s) => s.speedMs)
   const onboarded = useVehicleStore((s) => s.onboarded)
+  const driving = useDriveStore((s) => s.active)
+  useDriveMode()
   return (
     <div className="shell">
       <StatusBar />
       <main className="shell-main">
-        <Background speedMs={speedMs} />
-        <Outlet />
+        <Background speedMs={speedMs} paused={driving} />
+        {driving ? <DriveModeOverlay /> : <Outlet />}
       </main>
-      <div className="bottom-bar">
-        <BottomNav />
-      </div>
+      {!driving && (
+        <div className="bottom-bar">
+          <BottomNav />
+        </div>
+      )}
       <ToastHost />
       {!onboarded && <Onboarding />}
     </div>

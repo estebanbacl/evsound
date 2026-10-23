@@ -17,6 +17,6 @@ describe('App shell', () => {
     await userEvent.click(screen.getByRole('link', { name: 'Escuchar' }))
     expect(screen.getByRole('heading', { name: 'LISTEN' })).toBeInTheDocument()
     await userEvent.click(screen.getByRole('link', { name: 'Dinámica' }))
-    expect(screen.getByRole('heading', { name: 'DYNAMICS' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Dinámica' })).toBeInTheDocument()
   })
 })

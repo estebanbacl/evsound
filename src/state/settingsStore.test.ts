@@ -19,4 +19,17 @@ describe('settingsStore', () => {
     useSettingsStore.getState().setIntensity(0.3)
     expect(useSettingsStore.getState().preset).toBe('custom')
   })
+
+  it('presets set intensity, character and shift bias; manual tweaks go custom', () => {
+    useSettingsStore.getState().setPreset('sport')
+    expect(useSettingsStore.getState()).toMatchObject({
+      preset: 'sport',
+      intensity: 1,
+      shiftBias: 800,
+    })
+    useSettingsStore.getState().setPreset('comfort')
+    expect(useSettingsStore.getState()).toMatchObject({ preset: 'comfort', shiftBias: -700 })
+    useSettingsStore.getState().setCharacter(0.5)
+    expect(useSettingsStore.getState().preset).toBe('custom')
+  })
 })
