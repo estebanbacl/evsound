@@ -254,8 +254,8 @@ Fases 3 y 4 pueden correr en paralelo a 1–2 (p. ej. en otra worktree de Claude
 | Sprint 0 | ☐ | | |
 | 0 | ☑ | 2026-10-23 | Vite 8 + React 19 + TS strict, ESLint flat, Vitest, Playwright (car 1920x1200, small 1280x720); check y e2e en verde |
 | 1 | ☑ | 2026-10-23 | Kalman + extrapolación 60 Hz, fuentes GPS/Sim/Traza, recorder, trazas, /dev/telemetry; cobertura telemetry >90 % |
-| 2 | ☐ | | |
-| 3 | ☐ | | |
+| 2 | ☑ | 2026-10-23 | AudioEngine, Gearbox, EngineModel, SynthVoice, EngineVoice, 4 perfiles, EngineDriver, /dev/audio; e2e verifica señal en analyser. Pendiente humano: escucha subjetiva y 10 min sin glitches en dispositivo real |
+| 3 | ☑ | 2026-10-23 | Componentes ui, Background canvas, StatusBar/BottomNav reales, settings/audio/toast stores, /dev/ui, screenshots en docs/screenshots |
 | 4 | ☐ | | |
 | 5 | ☐ | | |
 | 6 | ☐ | | |

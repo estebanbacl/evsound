@@ -43,3 +43,14 @@
 .dev-legend {
   color: var(--text-2);
 }
+.ui-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  margin-bottom: var(--space-3);
+}
+.ui-col {
+  display: grid;
+  gap: var(--space-3);
+}
