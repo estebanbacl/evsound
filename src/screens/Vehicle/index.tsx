@@ -17,6 +17,9 @@ export function VehicleScreen() {
   const driveActive = useDriveStore((s) => s.active)
   const [open, setOpen] = useState(false)
   const trigger = useRef<HTMLButtonElement>(null)
+  // renders are not in the repository: when one is missing, fall back to the procedural 3D scene
+  const [missing, setMissing] = useState<string[]>([])
+  const showImage = !!vehicle.image && !missing.includes(vehicle.id)
   const [part, setPart] = useState<VehiclePart | null>(null)
   const [gl] = useState(webglAvailable)
 
@@ -35,9 +38,15 @@ export function VehicleScreen() {
           {!vehicle.displayName.startsWith(vehicle.maker) && <small>{vehicle.maker}</small>}
           <h1>{vehicle.displayName}</h1>
         </header>
-        {vehicle.image ? (
+        {showImage ? (
           <div className="vehicle-canvas vehicle-image" data-vehicle={vehicle.id}>
-            <img key={vehicle.id} src={vehicle.image} alt={fullName(vehicle)} draggable={false} />
+            <img
+              key={vehicle.id}
+              src={vehicle.image}
+              alt={fullName(vehicle)}
+              draggable={false}
+              onError={() => setMissing((m) => [...m, vehicle.id])}
+            />
           </div>
         ) : gl ? (
           <Suspense fallback={null}>
@@ -51,7 +60,7 @@ export function VehicleScreen() {
         ) : (
           <p className="vehicle-nogl">{esVehicle.noWebgl}</p>
         )}
-        {!vehicle.image && <p className="vehicle-hint">{esVehicle.partHint}</p>}
+        {!showImage && <p className="vehicle-hint">{esVehicle.partHint}</p>}
       </div>
 
       <SpecsPanel vehicle={vehicle} part={part} />

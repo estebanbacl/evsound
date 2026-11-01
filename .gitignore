@@ -6,3 +6,9 @@ test-results
 .DS_Store
 coverage
 lighthouse-report.json
+
+# Heavy / third-party-derived artwork: kept out of the repository (see README, "Imágenes de vehículos")
+docs/cars/
+docs/referencias/renders-originales/
+public/images/vehicles/
+docs/screenshots/vehicle-*.png

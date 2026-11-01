@@ -61,3 +61,7 @@ Sprint 0 (prueba física): `public/diagnostics/index.html` — página autónoma
 ## Lo que no se puede verificar desde el repositorio
 
 Ver [`docs/REVISION_FASE8.md`](docs/REVISION_FASE8.md): validación en el vehículo real (Sprint 0 / Fase 7), escucha subjetiva, rendimiento en MCU2/MCU3, modelos 3D finales, y contraste de las especificaciones con las fichas oficiales.
+
+## Imágenes de vehículos (no incluidas en el repositorio)
+
+Los renders X-Ray de la pantalla Vehículo (`public/images/vehicles/<id>.png`, con `<id>` = `tesla-model-y`, `tesla-model-3`, `icar-03`) y sus fuentes pesadas (`docs/cars/`) están en `.gitignore` por tamaño y por derechos de autor. Sin ellos la app sigue funcionando: la pantalla Vehículo muestra la escena 3D procedural. Para verlos, copia tus PNG con esos nombres a `public/images/vehicles/`. Los tests e2e de esa pantalla esperan los renders presentes.
