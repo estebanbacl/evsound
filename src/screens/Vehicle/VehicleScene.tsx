@@ -74,7 +74,7 @@ function Scene({
     }
   })
 
-  const s = vehicle.model3d.scale
+  const s = vehicle.model3d.scale * 0.86
   return (
     <group ref={group} scale={s}>
       {vehicle.model3d.url && !glbMissing ? (
@@ -83,6 +83,7 @@ function Scene({
         <ProceduralVehicle
           body={vehicle.body}
           stations={qualitySettings[quality].stations}
+          rich={quality !== 'low'}
           selected={selected}
           onSelect={onSelect}
         />

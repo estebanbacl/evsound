@@ -7,3 +7,6 @@ globalThis.ResizeObserver ??= class {
   unobserve() {}
   disconnect() {}
 }
+
+// the app opens with the instructions popup; tests start past it
+sessionStorage.setItem('ev-skip-intro', '1')

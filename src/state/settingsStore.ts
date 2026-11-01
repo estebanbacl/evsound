@@ -4,6 +4,9 @@ import { soundPresets } from '../audio/presets'
 import { soundProfiles } from '../audio/profiles'
 import { safeStorage } from './safeStorage'
 
+/** What happens when relaxation sounds and the simulated engine would play together. */
+export type AmbientMode = 'pause' | 'mix'
+
 export type SoundPreset = 'comfort' | 'balanced' | 'sport' | 'custom'
 
 interface SettingsState {
@@ -15,8 +18,8 @@ interface SettingsState {
   shiftBias: number
   preset: SoundPreset
   /** What ambient playback does while the engine sound runs. */
-  ambientMode: 'duck' | 'pause'
-  setAmbientMode: (m: 'duck' | 'pause') => void
+  ambientMode: AmbientMode
+  setAmbientMode: (m: AmbientMode) => void
   setProfile: (id: string) => void
   cycleProfile: (dir: 1 | -1) => void
   setVolume: (v: number) => void
@@ -36,7 +39,7 @@ export const useSettingsStore = create<SettingsState>()(
       character: soundPresets.balanced.character,
       shiftBias: soundPresets.balanced.shiftBias,
       preset: 'balanced',
-      ambientMode: 'duck',
+      ambientMode: 'pause',
       setAmbientMode: (ambientMode) => set({ ambientMode }),
       setProfile: (profileId) => set({ profileId }),
       cycleProfile: (dir) => {
@@ -53,6 +56,15 @@ export const useSettingsStore = create<SettingsState>()(
         set({ preset, intensity, character, shiftBias })
       },
     }),
-    { name: 'ev-settings', storage: createJSONStorage(() => safeStorage), version: 1 },
+    {
+      name: 'ev-settings',
+      storage: createJSONStorage(() => safeStorage),
+      version: 2,
+      migrate: (persisted) => {
+        const s = (persisted ?? {}) as Record<string, unknown>
+        // the old 'duck' value was the implicit default, so it maps to the new default
+        return { ...s, ambientMode: s.ambientMode === 'mix' ? 'mix' : 'pause' } as never
+      },
+    },
   ),
 )

@@ -70,29 +70,25 @@ describe('ui components', () => {
     expect(screen.getByText('km/h')).toBeInTheDocument()
   })
 
-  it('MiniPlayer shows pause when playing and formats time', async () => {
+  it('MiniPlayer toggles, stops and formats time', async () => {
     const onToggle = vi.fn()
-    const noop = () => {}
+    const onStop = vi.fn()
     render(
       <MiniPlayer
         title="T"
         subtitle="S"
         playing
-        shuffle={false}
-        repeat={false}
-        positionS={61}
-        durationS={236}
+        detail="12:30 restantes"
         onToggle={onToggle}
-        onNext={noop}
-        onPrev={noop}
-        onShuffle={noop}
-        onRepeat={noop}
+        onStop={onStop}
       />,
     )
     await userEvent.click(screen.getByRole('button', { name: 'Pausar' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Detener' }))
     expect(onToggle).toHaveBeenCalled()
-    expect(screen.getByText('01:01')).toBeInTheDocument()
-    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '26')
+    expect(onStop).toHaveBeenCalled()
+    expect(screen.getByText('12:30 restantes')).toBeInTheDocument()
+    expect(fmtTime(61)).toBe('01:01')
     expect(fmtTime(-3)).toBe('00:00')
   })
 

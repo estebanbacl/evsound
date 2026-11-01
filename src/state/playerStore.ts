@@ -1,138 +1,86 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { makeOrder, nextPos, prevPos } from '../audio/playerQueue'
-import type { AmbientCollection, AmbientTrack } from '../audio/ambientCatalog'
 import { safeStorage } from './safeStorage'
 
-export interface QueueItem {
-  collectionId: string
-  collectionTitle: string
-  artist: string
-  cover: AmbientCollection['cover']
-  track: AmbientTrack
-}
-
-interface PlayerState {
-  queue: QueueItem[]
-  order: number[]
-  pos: number
-  playing: boolean
-  shuffle: boolean
-  repeat: boolean
-  positionS: number
-  durationS: number
-  /** Persisted: collection ids, most recent first. */
-  recent: string[]
-  lastTrackId: string | null
-  lastCollectionId: string | null
-
-  playCollection: (c: AmbientCollection, trackId?: string) => void
-  setPlaying: (v: boolean) => void
-  toggle: () => void
-  next: () => void
-  prev: () => void
-  toggleShuffle: () => void
-  toggleRepeat: () => void
-  setProgress: (positionS: number, durationS: number) => void
-  /** Track ended naturally. */
-  ended: () => void
-}
-
-export const currentItem = (s: Pick<PlayerState, 'queue' | 'order' | 'pos'>): QueueItem | null =>
-  s.queue[s.order[s.pos]] ?? null
+export const TIMER_OPTIONS = [0, 15, 30, 45, 60] as const
+export type TimerMinutes = (typeof TIMER_OPTIONS)[number]
 
 const MAX_RECENT = 8
 
+interface PlayerState {
+  /** Sound loaded in the player (kept after pause/stop so it can be resumed). */
+  soundId: string | null
+  playing: boolean
+  /** 0..1, independent from the simulated engine's volume. */
+  volume: number
+  /** Sleep timer selection in minutes (0 = unlimited). */
+  timerMin: TimerMinutes
+  /** Epoch ms when the timer ends; only set while playing with a timer. */
+  endsAt: number | null
+  /** Persisted: sound ids. */
+  favorites: string[]
+  /** Persisted: sound ids, most recent first. */
+  recent: string[]
+
+  play: (id: string) => void
+  toggle: () => void
+  stop: () => void
+  setPlaying: (v: boolean) => void
+  setVolume: (v: number) => void
+  setTimer: (m: TimerMinutes) => void
+  toggleFavorite: (id: string) => void
+}
+
+const endFor = (min: number, now = Date.now()) => (min > 0 ? now + min * 60_000 : null)
+
 export const usePlayerStore = create<PlayerState>()(
   persist(
-    (set, get) => {
-      const goto = (pos: number, playing = true) => {
-        const s = get()
-        const item = s.queue[s.order[pos]]
-        set({
-          pos,
-          playing,
-          positionS: 0,
-          durationS: item?.track.durationS ?? 0,
-          lastTrackId: item?.track.id ?? s.lastTrackId,
-          lastCollectionId: item?.collectionId ?? s.lastCollectionId,
-        })
-      }
-      return {
-        queue: [],
-        order: [],
-        pos: 0,
-        playing: false,
-        shuffle: false,
-        repeat: false,
-        positionS: 0,
-        durationS: 0,
-        recent: [],
-        lastTrackId: null,
-        lastCollectionId: null,
+    (set, get) => ({
+      soundId: null,
+      playing: false,
+      volume: 0.5,
+      timerMin: 0,
+      endsAt: null,
+      favorites: [],
+      recent: [],
 
-        playCollection: (c, trackId) => {
-          const queue = c.tracks.map((track) => ({
-            collectionId: c.id,
-            collectionTitle: c.title,
-            artist: c.artist,
-            cover: c.cover,
-            track,
-          }))
-          const start = Math.max(0, trackId ? queue.findIndex((q) => q.track.id === trackId) : 0)
-          const { shuffle } = get()
-          const order = makeOrder(queue.length, start, shuffle)
-          set({
-            queue,
-            order,
-            recent: [c.id, ...get().recent.filter((id) => id !== c.id)].slice(0, MAX_RECENT),
-          })
-          goto(order.indexOf(start))
-        },
-        setPlaying: (playing) => set({ playing }),
-        toggle: () => {
-          if (get().queue.length) set({ playing: !get().playing })
-        },
-        next: () => {
-          const s = get()
-          const p = nextPos(s.pos, s.order.length, s.repeat)
-          if (p === null) set({ playing: false, positionS: 0 })
-          else goto(p, s.playing || s.positionS > 0)
-        },
-        prev: () => {
-          const s = get()
-          // like most players: restart the track if we are past the first seconds
-          if (s.positionS > 3) return goto(s.pos, s.playing)
-          goto(prevPos(s.pos, s.order.length, s.repeat), s.playing)
-        },
-        toggleShuffle: () => {
-          const s = get()
-          const cur = s.order[s.pos] ?? 0
-          const shuffle = !s.shuffle
-          const order = makeOrder(s.queue.length, cur, shuffle)
-          set({ shuffle, order, pos: order.indexOf(cur) })
-        },
-        toggleRepeat: () => set({ repeat: !get().repeat }),
-        setProgress: (positionS, durationS) => set({ positionS, durationS }),
-        ended: () => {
-          const s = get()
-          const p = nextPos(s.pos, s.order.length, s.repeat)
-          if (p === null) set({ playing: false, positionS: 0 })
-          else goto(p, true)
-        },
-      }
-    },
+      play: (id) => {
+        const s = get()
+        set({
+          soundId: id,
+          playing: true,
+          endsAt: endFor(s.timerMin),
+          recent: [id, ...s.recent.filter((r) => r !== id)].slice(0, MAX_RECENT),
+        })
+      },
+      toggle: () => {
+        const s = get()
+        if (!s.soundId) return
+        set({ playing: !s.playing, endsAt: s.playing ? null : endFor(s.timerMin) })
+      },
+      stop: () => set({ playing: false, endsAt: null }),
+      setPlaying: (playing) => {
+        const s = get()
+        if (!s.soundId && playing) return
+        set({ playing, endsAt: playing ? (s.endsAt ?? endFor(s.timerMin)) : null })
+      },
+      setVolume: (v) => set({ volume: Math.min(1, Math.max(0, v)) }),
+      setTimer: (timerMin) => set({ timerMin, endsAt: get().playing ? endFor(timerMin) : null }),
+      toggleFavorite: (id) => {
+        const f = get().favorites
+        set({ favorites: f.includes(id) ? f.filter((x) => x !== id) : [id, ...f] })
+      },
+    }),
     {
       name: 'ev-player',
       storage: createJSONStorage(() => safeStorage),
-      version: 1,
-      partialize: (s) => ({
-        recent: s.recent,
-        lastTrackId: s.lastTrackId,
-        lastCollectionId: s.lastCollectionId,
-        shuffle: s.shuffle,
-        repeat: s.repeat,
-      }),
+      version: 2,
+      partialize: (s) => ({ favorites: s.favorites, recent: s.recent, volume: s.volume }),
+      // v1 stored album/track history that no longer exists
+      migrate: () => ({ favorites: [], recent: [], volume: 0.5 }),
     },
   ),
 )
+
+export const remainingMs = (endsAt: number | null, now = Date.now()) =>
+  endsAt === null ? null : Math.max(0, endsAt - now)

@@ -5,7 +5,7 @@ import { App } from './App'
 import { useVehicleStore } from '../state/vehicleStore'
 
 describe('App shell', () => {
-  beforeEach(() => useVehicleStore.setState({ vehicleId: 'model-y-juniper-dm', onboarded: true }))
+  beforeEach(() => useVehicleStore.setState({ vehicleId: 'tesla-model-y', onboarded: true }))
 
   it('navigates between the three tabs', async () => {
     render(

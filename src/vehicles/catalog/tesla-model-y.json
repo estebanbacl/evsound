@@ -1,0 +1,27 @@
+{
+  "id": "tesla-model-y",
+  "displayName": "Model Y",
+  "maker": "Tesla",
+  "verified": false,
+  "body": "suv",
+  "specs": {
+    "powerKw": 384,
+    "powerHp": 517,
+    "zeroTo100s": 4.3,
+    "rangeKm": 533,
+    "rangeCycle": "WLTP",
+    "batteryKwh": 75,
+    "dcChargeKw": 250,
+    "drivetrain": "AWD"
+  },
+  "model3d": {
+    "url": "/models/tesla-model-y.glb",
+    "scale": 1,
+    "cameraPreset": [5.8, 1.7, 5.2]
+  },
+  "calibration": {
+    "maxSpeedKmh": 217,
+    "accelRefMs2": 6.4
+  },
+  "image": "/images/vehicles/tesla-model-y.png"
+}

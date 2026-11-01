@@ -1,93 +1,239 @@
 {
-  "version": 1,
-  "collections": [
+  "version": 2,
+  "categories": [
     {
-      "id": "orbita",
-      "title": "Órbita",
-      "artist": "EV Sound Studio",
-      "genre": "Ambiental",
-      "year": 2026,
+      "id": "naturaleza",
+      "title": "Naturaleza",
+      "description": "Bosques, fauna, hojas y viento.",
       "cover": {
-        "style": "orbit",
-        "hue": 2,
-        "seed": 7
-      },
-      "tracks": [
-        {
-          "id": "orbita-1",
-          "title": "Perigeo",
-          "file": "01-perigeo.wav",
-          "durationS": 32
-        },
-        {
-          "id": "orbita-2",
-          "title": "Horizonte lento",
-          "file": "02-horizonte-lento.wav",
-          "durationS": 34
-        },
-        {
-          "id": "orbita-3",
-          "title": "Cinturón de polvo",
-          "file": "03-cinturon-de-polvo.wav",
-          "durationS": 30
-        },
-        {
-          "id": "orbita-4",
-          "title": "Luz del apogeo",
-          "file": "04-luz-del-apogeo.wav",
-          "durationS": 33
-        },
-        {
-          "id": "orbita-5",
-          "title": "Aterrizaje suave",
-          "file": "05-aterrizaje-suave.wav",
-          "durationS": 36
-        }
-      ]
+        "style": "forest",
+        "hue": 140,
+        "seed": 11
+      }
     },
     {
-      "id": "lluvia-en-cabina",
-      "title": "Lluvia en cabina",
-      "artist": "EV Sound Studio",
-      "genre": "Naturaleza",
-      "year": 2026,
+      "id": "mar-y-oceano",
+      "title": "Mar y océano",
+      "description": "Olas, costa y lluvia sobre el mar.",
+      "cover": {
+        "style": "sea",
+        "hue": 200,
+        "seed": 31
+      }
+    },
+    {
+      "id": "lluvia",
+      "title": "Lluvia",
+      "description": "Lluvia suave, intensa y tormentas.",
       "cover": {
         "style": "rain",
         "hue": 355,
         "seed": 21
-      },
-      "tracks": [
-        {
-          "id": "lluvia-en-cabina-1",
-          "title": "Gotas en el techo",
-          "file": "01-gotas-en-el-techo.wav",
-          "durationS": 31
-        },
-        {
-          "id": "lluvia-en-cabina-2",
-          "title": "Lluvia ligera",
-          "file": "02-lluvia-ligera.wav",
-          "durationS": 30
-        },
-        {
-          "id": "lluvia-en-cabina-3",
-          "title": "Tormenta lejana",
-          "file": "03-tormenta-lejana.wav",
-          "durationS": 34
-        },
-        {
-          "id": "lluvia-en-cabina-4",
-          "title": "Parabrisas",
-          "file": "04-parabrisas.wav",
-          "durationS": 32
-        },
-        {
-          "id": "lluvia-en-cabina-5",
-          "title": "Cabina cálida",
-          "file": "05-cabina-calida.wav",
-          "durationS": 35
-        }
-      ]
+      }
+    },
+    {
+      "id": "noche-y-descanso",
+      "title": "Noche y descanso",
+      "description": "Grillos, bosque nocturno y calma.",
+      "cover": {
+        "style": "night",
+        "hue": 255,
+        "seed": 41
+      }
+    },
+    {
+      "id": "ruido-blanco",
+      "title": "Ruido blanco",
+      "description": "Ruido blanco, rosa y marrón.",
+      "cover": {
+        "style": "noise",
+        "hue": 20,
+        "seed": 51
+      }
+    },
+    {
+      "id": "ambiental",
+      "title": "Ambiental",
+      "description": "Órbita, atmósferas y sonidos espaciales.",
+      "cover": {
+        "style": "orbit",
+        "hue": 2,
+        "seed": 7
+      }
+    }
+  ],
+  "sounds": [
+    {
+      "id": "naturaleza/bosque-tranquilo",
+      "categoryId": "naturaleza",
+      "title": "Bosque tranquilo",
+      "file": "bosque-tranquilo.wav",
+      "durationS": 24,
+      "featured": true
+    },
+    {
+      "id": "naturaleza/rio-en-el-bosque",
+      "categoryId": "naturaleza",
+      "title": "Río en el bosque",
+      "file": "rio-en-el-bosque.wav",
+      "durationS": 24
+    },
+    {
+      "id": "naturaleza/viento-entre-arboles",
+      "categoryId": "naturaleza",
+      "title": "Viento entre árboles",
+      "file": "viento-entre-arboles.wav",
+      "durationS": 24
+    },
+    {
+      "id": "naturaleza/aves-al-amanecer",
+      "categoryId": "naturaleza",
+      "title": "Aves al amanecer",
+      "file": "aves-al-amanecer.wav",
+      "durationS": 24
+    },
+    {
+      "id": "mar-y-oceano/olas-suaves",
+      "categoryId": "mar-y-oceano",
+      "title": "Olas suaves",
+      "file": "olas-suaves.wav",
+      "durationS": 24,
+      "featured": true
+    },
+    {
+      "id": "mar-y-oceano/mar-abierto",
+      "categoryId": "mar-y-oceano",
+      "title": "Mar abierto",
+      "file": "mar-abierto.wav",
+      "durationS": 24
+    },
+    {
+      "id": "mar-y-oceano/lluvia-en-el-mar",
+      "categoryId": "mar-y-oceano",
+      "title": "Lluvia en el mar",
+      "file": "lluvia-en-el-mar.wav",
+      "durationS": 24,
+      "featured": true
+    },
+    {
+      "id": "mar-y-oceano/costa-al-atardecer",
+      "categoryId": "mar-y-oceano",
+      "title": "Costa al atardecer",
+      "file": "costa-al-atardecer.wav",
+      "durationS": 24
+    },
+    {
+      "id": "lluvia/lluvia-en-cabina",
+      "categoryId": "lluvia",
+      "title": "Lluvia en cabina",
+      "file": "lluvia-en-cabina.wav",
+      "durationS": 24
+    },
+    {
+      "id": "lluvia/lluvia-ligera",
+      "categoryId": "lluvia",
+      "title": "Lluvia ligera",
+      "file": "lluvia-ligera.wav",
+      "durationS": 24
+    },
+    {
+      "id": "lluvia/lluvia-intensa",
+      "categoryId": "lluvia",
+      "title": "Lluvia intensa",
+      "file": "lluvia-intensa.wav",
+      "durationS": 24
+    },
+    {
+      "id": "lluvia/lluvia-con-truenos",
+      "categoryId": "lluvia",
+      "title": "Lluvia con truenos",
+      "file": "lluvia-con-truenos.wav",
+      "durationS": 24
+    },
+    {
+      "id": "noche-y-descanso/noche-en-el-bosque",
+      "categoryId": "noche-y-descanso",
+      "title": "Noche en el bosque",
+      "file": "noche-en-el-bosque.wav",
+      "durationS": 24,
+      "featured": true
+    },
+    {
+      "id": "noche-y-descanso/grillos-nocturnos",
+      "categoryId": "noche-y-descanso",
+      "title": "Grillos nocturnos",
+      "file": "grillos-nocturnos.wav",
+      "durationS": 24
+    },
+    {
+      "id": "noche-y-descanso/viento-nocturno",
+      "categoryId": "noche-y-descanso",
+      "title": "Viento nocturno",
+      "file": "viento-nocturno.wav",
+      "durationS": 24
+    },
+    {
+      "id": "noche-y-descanso/bosque-bajo-la-lluvia",
+      "categoryId": "noche-y-descanso",
+      "title": "Bosque bajo la lluvia",
+      "file": "bosque-bajo-la-lluvia.wav",
+      "durationS": 24
+    },
+    {
+      "id": "ruido-blanco/ruido-blanco",
+      "categoryId": "ruido-blanco",
+      "title": "Ruido blanco",
+      "file": "ruido-blanco.wav",
+      "durationS": 24
+    },
+    {
+      "id": "ruido-blanco/ruido-rosa",
+      "categoryId": "ruido-blanco",
+      "title": "Ruido rosa",
+      "file": "ruido-rosa.wav",
+      "durationS": 24
+    },
+    {
+      "id": "ruido-blanco/ruido-marron",
+      "categoryId": "ruido-blanco",
+      "title": "Ruido marrón",
+      "file": "ruido-marron.wav",
+      "durationS": 24
+    },
+    {
+      "id": "ruido-blanco/ventilador-suave",
+      "categoryId": "ruido-blanco",
+      "title": "Ventilador suave",
+      "file": "ventilador-suave.wav",
+      "durationS": 24
+    },
+    {
+      "id": "ambiental/orbita",
+      "categoryId": "ambiental",
+      "title": "Órbita",
+      "file": "orbita.wav",
+      "durationS": 24
+    },
+    {
+      "id": "ambiental/espacio-profundo",
+      "categoryId": "ambiental",
+      "title": "Espacio profundo",
+      "file": "espacio-profundo.wav",
+      "durationS": 24
+    },
+    {
+      "id": "ambiental/atmosfera-espacial",
+      "categoryId": "ambiental",
+      "title": "Atmósfera espacial",
+      "file": "atmosfera-espacial.wav",
+      "durationS": 24
+    },
+    {
+      "id": "ambiental/frecuencias-ambientales",
+      "categoryId": "ambiental",
+      "title": "Frecuencias ambientales",
+      "file": "frecuencias-ambientales.wav",
+      "durationS": 24
     }
   ]
 }

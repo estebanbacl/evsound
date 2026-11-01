@@ -1,8 +1,9 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useRef, useState } from 'react'
 import { esVehicle } from '../../i18n/es'
 import { useDriveStore } from '../../state/driveStore'
 import { useVehicle, useVehicleStore } from '../../state/vehicleStore'
-import { vehicleCatalog } from '../../vehicles/catalog'
+import { fullName } from '../../vehicles/catalog'
+import { VehicleChangeModal } from './VehicleChangeModal'
 import type { VehiclePart } from './ProceduralVehicle'
 import { SpecsPanel } from './SpecsPanel'
 import { webglAvailable } from './webgl'
@@ -14,40 +15,31 @@ export function VehicleScreen() {
   const vehicle = useVehicle()
   const select = useVehicleStore((s) => s.select)
   const driveActive = useDriveStore((s) => s.active)
+  const [open, setOpen] = useState(false)
+  const trigger = useRef<HTMLButtonElement>(null)
   const [part, setPart] = useState<VehiclePart | null>(null)
   const [gl] = useState(webglAvailable)
 
   return (
     <section className="vehicle-screen" aria-label="Vehículo">
-      <div className="vehicle-list" role="radiogroup" aria-label={esVehicle.select}>
-        {vehicleCatalog.map((v) => {
-          const active = v.id === vehicle.id
-          return (
-            <button
-              key={v.id}
-              role="radio"
-              aria-checked={active}
-              className={`vehicle-card ${active ? 'is-active' : ''}`}
-              onClick={() => {
-                select(v.id)
-                setPart(null)
-              }}
-            >
-              <small>{active ? esVehicle.active : esVehicle.select}</small>
-              <strong>{v.displayName}</strong>
-              <span>{v.variant}</span>
-            </button>
-          )
-        })}
+      <div className="vehicle-active">
+        <small>{esVehicle.activeLabel}</small>
+        <strong>{fullName(vehicle)}</strong>
+        <button ref={trigger} className="vehicle-change" onClick={() => setOpen(true)}>
+          {esVehicle.change}
+        </button>
       </div>
 
       <div className="vehicle-stage">
         <header className="vehicle-title">
-          <small>{vehicle.maker}</small>
+          {!vehicle.displayName.startsWith(vehicle.maker) && <small>{vehicle.maker}</small>}
           <h1>{vehicle.displayName}</h1>
-          <span>{vehicle.variant}</span>
         </header>
-        {gl ? (
+        {vehicle.image ? (
+          <div className="vehicle-canvas vehicle-image" data-vehicle={vehicle.id}>
+            <img key={vehicle.id} src={vehicle.image} alt={fullName(vehicle)} draggable={false} />
+          </div>
+        ) : gl ? (
           <Suspense fallback={null}>
             <VehicleScene
               vehicle={vehicle}
@@ -59,10 +51,26 @@ export function VehicleScreen() {
         ) : (
           <p className="vehicle-nogl">{esVehicle.noWebgl}</p>
         )}
-        <p className="vehicle-hint">{esVehicle.partHint}</p>
+        {!vehicle.image && <p className="vehicle-hint">{esVehicle.partHint}</p>}
       </div>
 
       <SpecsPanel vehicle={vehicle} part={part} />
+
+      {open && (
+        <VehicleChangeModal
+          currentId={vehicle.id}
+          onCancel={() => {
+            setOpen(false)
+            trigger.current?.focus()
+          }}
+          onConfirm={(id) => {
+            select(id)
+            setPart(null)
+            setOpen(false)
+            trigger.current?.focus()
+          }}
+        />
+      )}
     </section>
   )
 }

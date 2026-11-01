@@ -49,3 +49,19 @@ export const IconDrive = (p: SVGProps<SVGSVGElement>) =>
     <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 3l2 4h-4zm-7 7h4v2H5zm14 0v2h-4v-2zm-7 7l-2-4h4z" />,
     p,
   )
+export const IconStop = (p: SVGProps<SVGSVGElement>) => base(<path d="M6 6h12v12H6z" />, p)
+export const IconStar = (p: SVGProps<SVGSVGElement>) =>
+  base(
+    <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z" />,
+    p,
+  )
+export const IconStarOutline = (p: SVGProps<SVGSVGElement>) =>
+  base(
+    <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8zm0 4.3l-1.6 3.4-3.7.5 2.7 2.6-.7 3.7 3.3-1.8 3.3 1.8-.7-3.7 2.7-2.6-3.7-.5z" />,
+    p,
+  )
+export const IconHelp = (p: SVGProps<SVGSVGElement>) =>
+  base(
+    <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 16h-2v-2h2zm2.1-7.7l-.9.9c-.7.7-1.2 1.3-1.2 2.8h-2v-.5c0-1.1.5-2.1 1.2-2.8l1.2-1.3a2 2 0 10-3.4-1.4h-2a4 4 0 118 .3c0 .7-.4 1.3-.9 1.9z" />,
+    p,
+  )

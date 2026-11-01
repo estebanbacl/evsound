@@ -1,11 +1,10 @@
-export type VehicleId = 'model-y-juniper-dm' | 'model-3-highland-dm' | 'icar-03-4x4' | (string & {})
+export type VehicleId = 'tesla-model-y' | 'tesla-model-3' | 'icar-03' | (string & {})
 
 export type BodyType = 'suv' | 'sedan' | 'offroad'
 
 export interface VehicleProfile {
   id: VehicleId
   displayName: string
-  variant: string
   maker: string
   /** False until the specs were checked against the official data sheet. */
   verified: boolean
@@ -21,6 +20,8 @@ export interface VehicleProfile {
     dcChargeKw: number
     drivetrain: 'AWD' | 'RWD' | 'FWD'
   }
+  /** Hero render shown on the Vehicle screen (falls back to the procedural 3D scene when absent). */
+  image?: string
   model3d: { url: string; scale: number; cameraPreset: [number, number, number] }
   calibration: { maxSpeedKmh: number; accelRefMs2: number }
 }

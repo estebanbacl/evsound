@@ -20,7 +20,24 @@ export const useVehicleStore = create<VehicleState>()(
       select: (vehicleId) => set({ vehicleId }),
       completeOnboarding: (vehicleId) => set({ vehicleId, onboarded: true }),
     }),
-    { name: 'ev-vehicle', storage: createJSONStorage(() => safeStorage), version: 1 },
+    {
+      name: 'ev-vehicle',
+      storage: createJSONStorage(() => safeStorage),
+      version: 2,
+      // v1 ids carried trim/motor suffixes; map them to the plain model ids
+      migrate: (persisted) => {
+        const s = (persisted ?? {}) as { vehicleId?: string | null; onboarded?: boolean }
+        const legacy: Record<string, string> = {
+          'model-y-juniper-dm': 'tesla-model-y',
+          'model-3-highland-dm': 'tesla-model-3',
+          'icar-03-4x4': 'icar-03',
+        }
+        return {
+          vehicleId: s.vehicleId ? (legacy[s.vehicleId] ?? s.vehicleId) : null,
+          onboarded: Boolean(s.onboarded),
+        }
+      },
+    },
   ),
 )
 

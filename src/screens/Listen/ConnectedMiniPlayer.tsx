@@ -1,27 +1,27 @@
-import { seek } from '../../app/ambientController'
-import { currentItem, usePlayerStore } from '../../state/playerStore'
+import { useLocation } from 'react-router-dom'
+import { esListen } from '../../i18n/es'
+import { usePlayerStore } from '../../state/playerStore'
 import { MiniPlayer } from '../../ui/components/MiniPlayer'
+import { useRemaining } from './NowPlaying'
+import { useCatalog } from './useCatalog'
 
-/** Global mini player (bottom bar). Renders nothing until something was played. */
+/** Global mini player (bottom bar). Hidden on Escuchar, where the full panel is shown. */
 export function ConnectedMiniPlayer() {
+  const { catalog } = useCatalog()
   const s = usePlayerStore()
-  const cur = currentItem(s)
-  if (!cur) return null
+  const remaining = useRemaining()
+  const { pathname } = useLocation()
+  const sound = catalog?.sounds.find((x) => x.id === s.soundId)
+  const cat = catalog?.categories.find((c) => c.id === sound?.categoryId)
+  if (!sound || !cat || pathname.startsWith('/listen')) return null
   return (
     <MiniPlayer
-      title={cur.track.title}
-      subtitle={cur.collectionTitle}
+      title={sound.title}
+      subtitle={cat.title}
       playing={s.playing}
-      shuffle={s.shuffle}
-      repeat={s.repeat}
-      positionS={s.positionS}
-      durationS={s.durationS || cur.track.durationS}
+      detail={remaining && s.playing ? esListen.now.remaining(remaining) : undefined}
       onToggle={s.toggle}
-      onNext={s.next}
-      onPrev={s.prev}
-      onShuffle={s.toggleShuffle}
-      onRepeat={s.toggleRepeat}
-      onSeek={seek}
+      onStop={s.stop}
     />
   )
 }

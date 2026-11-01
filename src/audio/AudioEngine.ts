@@ -11,6 +11,7 @@ export class AudioEngine {
   private ctx: AudioContext | null = null
   private bus: GainNode | null = null
   private master: GainNode | null = null
+  private ambientBus: GainNode | null = null
   private limiter: DynamicsCompressorNode | null = null
   private _analyser: AnalyserNode | null = null
   private listeners = new Map<AudioEngineEvent, Set<Listener>>()
@@ -43,6 +44,10 @@ export class AudioEngine {
   }
   get input(): AudioNode | null {
     return this.bus
+  }
+  /** Ambient/relaxation sounds enter here: own volume, still protected by the limiter. */
+  get ambientInput(): AudioNode | null {
+    return this.ambientBus
   }
   get analyser(): AnalyserNode | null {
     return this._analyser
@@ -94,8 +99,10 @@ export class AudioEngine {
     this.limiter.release.value = 0.1
     this._analyser = ctx.createAnalyser()
     this._analyser.fftSize = 1024
+    this.ambientBus = ctx.createGain()
     this.bus.connect(this.master)
     this.master.connect(this.limiter)
+    this.ambientBus.connect(this.limiter)
     this.limiter.connect(this._analyser)
     this._analyser.connect(ctx.destination)
     ctx.addEventListener('statechange', () => {

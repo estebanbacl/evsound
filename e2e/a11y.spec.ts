@@ -5,7 +5,7 @@ import { skipOnboarding } from './helpers.ts'
 const screens = [
   ['vehicle', '/#/vehicle'],
   ['listen', '/#/listen'],
-  ['listen-detail', '/#/listen/orbita'],
+  ['listen-detail', '/#/listen/naturaleza'],
   ['dynamics', '/#/dynamics'],
 ] as const
 

@@ -2,64 +2,164 @@
   "version": 1,
   "packs": [
     {
-      "id": "ambient-orbita",
+      "id": "ambient-naturaleza",
       "kind": "ambient",
-      "title": "Órbita",
-      "bytes": 3638470,
+      "title": "Naturaleza",
+      "bytes": 2116976,
       "extras": [
         "/sounds/ambient/catalog.json"
       ],
       "files": [
         {
-          "url": "/sounds/ambient/orbita/01-perigeo.wav",
-          "bytes": 705644
+          "url": "/sounds/ambient/naturaleza/bosque-tranquilo.wav",
+          "bytes": 529244
         },
         {
-          "url": "/sounds/ambient/orbita/02-horizonte-lento.wav",
-          "bytes": 749744
+          "url": "/sounds/ambient/naturaleza/rio-en-el-bosque.wav",
+          "bytes": 529244
         },
         {
-          "url": "/sounds/ambient/orbita/03-cinturon-de-polvo.wav",
-          "bytes": 661544
+          "url": "/sounds/ambient/naturaleza/viento-entre-arboles.wav",
+          "bytes": 529244
         },
         {
-          "url": "/sounds/ambient/orbita/04-luz-del-apogeo.wav",
-          "bytes": 727694
-        },
-        {
-          "url": "/sounds/ambient/orbita/05-aterrizaje-suave.wav",
-          "bytes": 793844
+          "url": "/sounds/ambient/naturaleza/aves-al-amanecer.wav",
+          "bytes": 529244
         }
       ]
     },
     {
-      "id": "ambient-lluvia-en-cabina",
+      "id": "ambient-mar-y-oceano",
       "kind": "ambient",
-      "title": "Lluvia en cabina",
-      "bytes": 3572320,
+      "title": "Mar y océano",
+      "bytes": 2116976,
       "extras": [
         "/sounds/ambient/catalog.json"
       ],
       "files": [
         {
-          "url": "/sounds/ambient/lluvia-en-cabina/01-gotas-en-el-techo.wav",
-          "bytes": 683594
+          "url": "/sounds/ambient/mar-y-oceano/olas-suaves.wav",
+          "bytes": 529244
         },
         {
-          "url": "/sounds/ambient/lluvia-en-cabina/02-lluvia-ligera.wav",
-          "bytes": 661544
+          "url": "/sounds/ambient/mar-y-oceano/mar-abierto.wav",
+          "bytes": 529244
         },
         {
-          "url": "/sounds/ambient/lluvia-en-cabina/03-tormenta-lejana.wav",
-          "bytes": 749744
+          "url": "/sounds/ambient/mar-y-oceano/lluvia-en-el-mar.wav",
+          "bytes": 529244
         },
         {
-          "url": "/sounds/ambient/lluvia-en-cabina/04-parabrisas.wav",
-          "bytes": 705644
+          "url": "/sounds/ambient/mar-y-oceano/costa-al-atardecer.wav",
+          "bytes": 529244
+        }
+      ]
+    },
+    {
+      "id": "ambient-lluvia",
+      "kind": "ambient",
+      "title": "Lluvia",
+      "bytes": 2116976,
+      "extras": [
+        "/sounds/ambient/catalog.json"
+      ],
+      "files": [
+        {
+          "url": "/sounds/ambient/lluvia/lluvia-en-cabina.wav",
+          "bytes": 529244
         },
         {
-          "url": "/sounds/ambient/lluvia-en-cabina/05-cabina-calida.wav",
-          "bytes": 771794
+          "url": "/sounds/ambient/lluvia/lluvia-ligera.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/lluvia/lluvia-intensa.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/lluvia/lluvia-con-truenos.wav",
+          "bytes": 529244
+        }
+      ]
+    },
+    {
+      "id": "ambient-noche-y-descanso",
+      "kind": "ambient",
+      "title": "Noche y descanso",
+      "bytes": 2116976,
+      "extras": [
+        "/sounds/ambient/catalog.json"
+      ],
+      "files": [
+        {
+          "url": "/sounds/ambient/noche-y-descanso/noche-en-el-bosque.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/noche-y-descanso/grillos-nocturnos.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/noche-y-descanso/viento-nocturno.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/noche-y-descanso/bosque-bajo-la-lluvia.wav",
+          "bytes": 529244
+        }
+      ]
+    },
+    {
+      "id": "ambient-ruido-blanco",
+      "kind": "ambient",
+      "title": "Ruido blanco",
+      "bytes": 2116976,
+      "extras": [
+        "/sounds/ambient/catalog.json"
+      ],
+      "files": [
+        {
+          "url": "/sounds/ambient/ruido-blanco/ruido-blanco.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/ruido-blanco/ruido-rosa.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/ruido-blanco/ruido-marron.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/ruido-blanco/ventilador-suave.wav",
+          "bytes": 529244
+        }
+      ]
+    },
+    {
+      "id": "ambient-ambiental",
+      "kind": "ambient",
+      "title": "Ambiental",
+      "bytes": 2116976,
+      "extras": [
+        "/sounds/ambient/catalog.json"
+      ],
+      "files": [
+        {
+          "url": "/sounds/ambient/ambiental/orbita.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/ambiental/espacio-profundo.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/ambiental/atmosfera-espacial.wav",
+          "bytes": 529244
+        },
+        {
+          "url": "/sounds/ambient/ambiental/frecuencias-ambientales.wav",
+          "bytes": 529244
         }
       ]
     }

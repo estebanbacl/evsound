@@ -5,11 +5,7 @@ import { nextQuality, pickInitialQuality } from './quality'
 
 describe('catalog', () => {
   it('has the three v1 vehicles with unique ids', () => {
-    expect(vehicleCatalog.map((v) => v.id)).toEqual([
-      'model-y-juniper-dm',
-      'model-3-highland-dm',
-      'icar-03-4x4',
-    ])
+    expect(vehicleCatalog.map((v) => v.id)).toEqual(['tesla-model-y', 'tesla-model-3', 'icar-03'])
   })
 
   it('matches the SPEC §6 spec table and is flagged unverified', () => {
@@ -59,7 +55,7 @@ describe('detectVehicle', () => {
   it('suggests a Tesla for the Tesla browser UA', () => {
     expect(
       detectVehicle('Mozilla/5.0 (X11; GNU/Linux) Chrome/130 Safari/537.36 Tesla/2026.20.1'),
-    ).toBe('model-y-juniper-dm')
+    ).toBe('tesla-model-y')
   })
   it('suggests nothing otherwise', () => {
     expect(detectVehicle('Mozilla/5.0 (Macintosh) Chrome/130')).toBeNull()

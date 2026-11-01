@@ -1,104 +1,127 @@
 import { Link } from 'react-router-dom'
+import type { AmbientCatalog, AmbientSound } from '../../audio/ambientCatalog'
+import { PacksPanel } from '../../app/PacksPanel'
 import { esListen as t } from '../../i18n/es'
 import { usePlayerStore } from '../../state/playerStore'
-import { useSettingsStore } from '../../state/settingsStore'
-import { SegmentedControl } from '../../ui/components/SegmentedControl'
-import { IconPlay } from '../../ui/icons'
-import type { AmbientCollection } from '../../audio/ambientCatalog'
 import { Cover } from './Cover'
+import { NowPlaying } from './NowPlaying'
+import { SoundRow } from './SoundRow'
 import { useCatalog } from './useCatalog'
 import './listen.css'
 
-function AlbumCard({ c, subtitle }: { c: AmbientCollection; subtitle?: string }) {
-  const play = usePlayerStore((s) => s.playCollection)
+export function ListenFrame({ children }: { children: React.ReactNode }) {
   return (
-    <div className="album-card">
-      <Link to={`/listen/${c.id}`} className="album-link" aria-label={`${t.open} ${c.title}`}>
-        <Cover cover={c.cover} size={320} />
-        <strong>{c.title}</strong>
-        <span>{subtitle ?? c.artist}</span>
-      </Link>
-      <button className="album-play" aria-label={`${t.play} ${c.title}`} onClick={() => play(c)}>
-        <IconPlay />
-      </button>
-    </div>
+    <section className="listen" aria-label="Escuchar">
+      <div className="listen-main">{children}</div>
+      <NowPlaying />
+    </section>
+  )
+}
+
+export function CatalogGate({
+  children,
+}: {
+  children: (catalog: AmbientCatalog) => React.ReactNode
+}) {
+  const { catalog, error, retry } = useCatalog()
+  // same tree in every state so the player panel is never remounted
+  return (
+    <ListenFrame>
+      {error ? (
+        <>
+          <p className="listen-empty">{t.loadError}</p>
+          <button className="big-btn" onClick={retry}>
+            {t.retry}
+          </button>
+        </>
+      ) : catalog ? (
+        children(catalog)
+      ) : null}
+    </ListenFrame>
   )
 }
 
 export function ListenHome() {
-  const { collections, error, retry } = useCatalog()
-  const { recent, lastCollectionId, lastTrackId } = usePlayerStore()
-  const { ambientMode, setAmbientMode } = useSettingsStore()
-
-  if (error)
-    return (
-      <section className="listen" aria-label="Escuchar">
-        <p className="listen-empty">{t.loadError}</p>
-        <button className="big-btn" onClick={retry}>
-          {t.retry}
-        </button>
-      </section>
-    )
-  if (!collections) return <section className="listen" aria-label="Escuchar" aria-busy="true" />
-
-  const byId = new Map(collections.map((c) => [c.id, c]))
-  const last = lastCollectionId ? byId.get(lastCollectionId) : undefined
-  const lastTrack = last?.tracks.find((x) => x.id === lastTrackId)
-  const recentCols = recent.map((id) => byId.get(id)).filter((c): c is AmbientCollection => !!c)
-  // never played first, then least recently played
-  const staleness = (id: string) => {
-    const r = recent.indexOf(id)
-    return r === -1 ? Number.MAX_SAFE_INTEGER : r
-  }
-  const forYou = [...collections].sort((a, b) => staleness(b.id) - staleness(a.id))
-
+  const favorites = usePlayerStore((s) => s.favorites)
+  const recent = usePlayerStore((s) => s.recent)
   return (
-    <section className="listen" aria-label="Escuchar">
-      <header className="listen-head">
-        <h1>{t.title}</h1>
-        <SegmentedControl
-          label={t.withEngine}
-          value={ambientMode}
-          onChange={setAmbientMode}
-          options={[
-            { value: 'duck', label: t.duck },
-            { value: 'pause', label: t.pause },
-          ]}
-        />
-      </header>
+    <CatalogGate>
+      {(catalog) => {
+        const byId = new Map(catalog.sounds.map((s) => [s.id, s]))
+        const pick = (ids: string[]) =>
+          ids.map((id) => byId.get(id)).filter((s): s is AmbientSound => !!s)
+        const favs = pick(favorites)
+        const rec = pick(recent)
+        const featured = catalog.sounds.filter((s) => s.featured)
+        return (
+          <>
+            <header className="listen-head">
+              <div>
+                <h1>{t.title}</h1>
+                <p>{t.tagline}</p>
+              </div>
+            </header>
 
-      <div className="listen-row">
-        <h2>{t.last}</h2>
-        {last ? (
-          <div className="shelf">
-            <AlbumCard c={last} subtitle={lastTrack?.title} />
-          </div>
-        ) : (
-          <p className="listen-empty">{t.nothingYet}</p>
-        )}
-      </div>
+            <div className="listen-row">
+              <h2>
+                {t.categories} · {t.categoriesCount(catalog.categories.length)}
+              </h2>
+              <div className="cat-grid">
+                {catalog.categories.map((c) => (
+                  <Link
+                    key={c.id}
+                    to={`/listen/${c.id}`}
+                    className="cat-card"
+                    aria-label={`${t.open} ${c.title}`}
+                  >
+                    <Cover cover={c.cover} size={240} />
+                    <strong>{c.title}</strong>
+                    <span>{c.description}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-      <div className="listen-row">
-        <h2>{t.recent}</h2>
-        {recentCols.length ? (
-          <div className="shelf">
-            {recentCols.map((c) => (
-              <AlbumCard key={c.id} c={c} />
-            ))}
-          </div>
-        ) : (
-          <p className="listen-empty">{t.nothingYet}</p>
-        )}
-      </div>
+            <div className="listen-row">
+              <h2>{t.featured}</h2>
+              <div className="sound-list is-compact">
+                {featured.map((s) => (
+                  <SoundRow key={s.id} sound={s} catalog={catalog} />
+                ))}
+              </div>
+            </div>
 
-      <div className="listen-row">
-        <h2>{t.forYou}</h2>
-        <div className="shelf">
-          {forYou.map((c) => (
-            <AlbumCard key={c.id} c={c} subtitle={`${c.genre} · ${c.tracks.length} ${t.tracks}`} />
-          ))}
-        </div>
-      </div>
-    </section>
+            <div className="listen-row">
+              <h2>{t.favorites}</h2>
+              {favs.length ? (
+                <div className="sound-list is-compact">
+                  {favs.map((s) => (
+                    <SoundRow key={s.id} sound={s} catalog={catalog} />
+                  ))}
+                </div>
+              ) : (
+                <p className="listen-empty">{t.noFavorites}</p>
+              )}
+            </div>
+
+            <div className="listen-row">
+              <h2>{t.recent}</h2>
+              {rec.length ? (
+                <div className="sound-list is-compact">
+                  {rec.map((s) => (
+                    <SoundRow key={s.id} sound={s} catalog={catalog} />
+                  ))}
+                </div>
+              ) : (
+                <p className="listen-empty">{t.nothingYet}</p>
+              )}
+            </div>
+
+            <p className="listen-empty">{t.noGps}</p>
+            <PacksPanel />
+          </>
+        )
+      }}
+    </CatalogGate>
   )
 }

@@ -59,18 +59,12 @@ export function UiCatalogScreen() {
         </div>
       </div>
       <MiniPlayer
-        title="To The Stars"
-        subtitle="Horizon One"
+        title="Bosque tranquilo"
+        subtitle="Naturaleza"
         playing={playing}
-        shuffle
-        repeat={false}
-        positionS={1}
-        durationS={236}
+        detail="29:30 restantes"
         onToggle={() => setPlaying((p) => !p)}
-        onNext={() => {}}
-        onPrev={() => {}}
-        onShuffle={() => {}}
-        onRepeat={() => {}}
+        onStop={() => setPlaying(false)}
       />
     </section>
   )

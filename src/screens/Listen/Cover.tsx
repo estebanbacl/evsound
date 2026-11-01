@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { AmbientCollection } from '../../audio/ambientCatalog'
+import type { AmbientCover } from '../../audio/ambientCatalog'
 import { coverDataUri } from '../../audio/cover'
 
 export function Cover({
@@ -7,7 +7,7 @@ export function Cover({
   size = 512,
   className = '',
 }: {
-  cover: AmbientCollection['cover']
+  cover: AmbientCover
   size?: number
   className?: string
 }) {

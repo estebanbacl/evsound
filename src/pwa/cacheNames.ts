@@ -2,3 +2,4 @@
 export const SOUND_CACHE = 'ev-sounds-v1'
 export const MODEL_CACHE = 'ev-models-v1'
 export const DATA_CACHE = 'ev-data-v1'
+export const IMAGE_CACHE = 'ev-images-v1'

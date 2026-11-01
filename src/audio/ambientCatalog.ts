@@ -1,27 +1,37 @@
-export interface AmbientTrack {
-  id: string
-  title: string
-  file: string
-  durationS: number
+export type CoverStyle = 'forest' | 'sea' | 'rain' | 'night' | 'noise' | 'orbit'
+
+export interface AmbientCover {
+  style: CoverStyle
+  hue: number
+  seed: number
 }
 
-export interface AmbientCollection {
+export interface AmbientCategory {
   id: string
   title: string
-  artist: string
-  genre: string
-  year: number
-  cover: { style: 'orbit' | 'rain'; hue: number; seed: number }
-  tracks: AmbientTrack[]
+  description: string
+  cover: AmbientCover
+}
+
+export interface AmbientSound {
+  /** `<categoryId>/<slug>`, also the file path under public/sounds/ambient. */
+  id: string
+  categoryId: string
+  title: string
+  file: string
+  /** Length of one seamless loop. */
+  durationS: number
+  featured?: boolean
 }
 
 export interface AmbientCatalog {
   version: number
-  collections: AmbientCollection[]
+  categories: AmbientCategory[]
+  sounds: AmbientSound[]
 }
 
-export const trackUrl = (collectionId: string, file: string) =>
-  `${import.meta.env.BASE_URL}sounds/ambient/${collectionId}/${file}`
+export const soundUrl = (s: Pick<AmbientSound, 'categoryId' | 'file'>) =>
+  `${import.meta.env.BASE_URL}sounds/ambient/${s.categoryId}/${s.file}`
 
 let cached: Promise<AmbientCatalog> | null = null
 

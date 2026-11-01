@@ -1,95 +1,87 @@
-import { currentItem, usePlayerStore } from './playerStore'
-import type { AmbientCollection } from '../audio/ambientCatalog'
-
-const col: AmbientCollection = {
-  id: 'c1',
-  title: 'Col',
-  artist: 'Me',
-  genre: 'g',
-  year: 2026,
-  cover: { style: 'orbit', hue: 1, seed: 1 },
-  tracks: ['a', 'b', 'c'].map((n, i) => ({
-    id: `t${i}`,
-    title: n,
-    file: `${n}.wav`,
-    durationS: 30,
-  })),
-}
-const other: AmbientCollection = { ...col, id: 'c2', title: 'Other' }
+import { remainingMs, usePlayerStore } from './playerStore'
 
 const reset = () =>
   usePlayerStore.setState({
-    queue: [],
-    order: [],
-    pos: 0,
+    soundId: null,
     playing: false,
-    shuffle: false,
-    repeat: false,
-    positionS: 0,
-    durationS: 0,
+    volume: 0.5,
+    timerMin: 0,
+    endsAt: null,
+    favorites: [],
     recent: [],
-    lastTrackId: null,
-    lastCollectionId: null,
   })
 
 describe('playerStore', () => {
-  beforeEach(reset)
-
-  it('plays a collection from a chosen track and records last/recent', () => {
-    usePlayerStore.getState().playCollection(col, 't1')
-    const s = usePlayerStore.getState()
-    expect(currentItem(s)?.track.id).toBe('t1')
-    expect(s.playing).toBe(true)
-    expect(s.lastCollectionId).toBe('c1')
-    expect(s.durationS).toBe(30)
-    usePlayerStore.getState().playCollection(other)
-    usePlayerStore.getState().playCollection(col)
-    expect(usePlayerStore.getState().recent).toEqual(['c1', 'c2'])
+  beforeEach(() => {
+    reset()
+    vi.useFakeTimers()
+    vi.setSystemTime(1_000_000)
   })
+  afterEach(() => vi.useRealTimers())
 
-  it('next/prev walk the queue and stop at the end without repeat', () => {
-    const p = usePlayerStore.getState()
-    p.playCollection(col)
-    p.next()
-    p.next()
-    expect(currentItem(usePlayerStore.getState())?.track.id).toBe('t2')
-    usePlayerStore.getState().ended()
+  it('does not start on its own and ignores toggle without a sound', () => {
     expect(usePlayerStore.getState().playing).toBe(false)
-    usePlayerStore.getState().prev()
-    expect(currentItem(usePlayerStore.getState())?.track.id).toBe('t1')
-  })
-
-  it('repeat loops the collection', () => {
-    const p = usePlayerStore.getState()
-    p.playCollection(col, 't2')
-    p.toggleRepeat()
-    usePlayerStore.getState().ended()
-    expect(currentItem(usePlayerStore.getState())?.track.id).toBe('t0')
-    expect(usePlayerStore.getState().playing).toBe(true)
-  })
-
-  it('prev past 3 s restarts the current track instead', () => {
-    const p = usePlayerStore.getState()
-    p.playCollection(col, 't1')
-    usePlayerStore.getState().setProgress(10, 30)
-    usePlayerStore.getState().prev()
-    const s = usePlayerStore.getState()
-    expect(currentItem(s)?.track.id).toBe('t1')
-    expect(s.positionS).toBe(0)
-  })
-
-  it('shuffle keeps the current track and reorders the rest', () => {
-    const p = usePlayerStore.getState()
-    p.playCollection(col, 't1')
-    p.toggleShuffle()
-    const s = usePlayerStore.getState()
-    expect(s.shuffle).toBe(true)
-    expect(currentItem(s)?.track.id).toBe('t1')
-    expect([...s.order].sort()).toEqual([0, 1, 2])
-  })
-
-  it('toggle does nothing on an empty queue', () => {
     usePlayerStore.getState().toggle()
+    usePlayerStore.getState().setPlaying(true)
     expect(usePlayerStore.getState().playing).toBe(false)
+  })
+
+  it('plays a sound, tracks recents (most recent first, no duplicates, capped)', () => {
+    const s = usePlayerStore.getState()
+    for (let i = 0; i < 10; i++) s.play(`c/s${i}`)
+    s.play('c/s5')
+    const { recent, soundId, playing } = usePlayerStore.getState()
+    expect(soundId).toBe('c/s5')
+    expect(playing).toBe(true)
+    expect(recent[0]).toBe('c/s5')
+    expect(recent.filter((r) => r === 'c/s5')).toHaveLength(1)
+    expect(recent).toHaveLength(8)
+  })
+
+  it('pause keeps the sound, stop clears the timer', () => {
+    const s = usePlayerStore.getState()
+    s.setTimer(15)
+    s.play('a/b')
+    expect(usePlayerStore.getState().endsAt).toBe(1_000_000 + 15 * 60_000)
+    usePlayerStore.getState().toggle()
+    expect(usePlayerStore.getState()).toMatchObject({
+      playing: false,
+      endsAt: null,
+      soundId: 'a/b',
+    })
+    usePlayerStore.getState().toggle()
+    expect(usePlayerStore.getState().endsAt).toBe(1_000_000 + 15 * 60_000)
+    usePlayerStore.getState().stop()
+    expect(usePlayerStore.getState()).toMatchObject({
+      playing: false,
+      endsAt: null,
+      soundId: 'a/b',
+    })
+  })
+
+  it('timer: unlimited has no end; changing it while playing restarts the countdown', () => {
+    const s = usePlayerStore.getState()
+    s.play('a/b')
+    expect(usePlayerStore.getState().endsAt).toBeNull()
+    s.setTimer(30)
+    expect(usePlayerStore.getState().endsAt).toBe(1_000_000 + 30 * 60_000)
+    s.setTimer(0)
+    expect(usePlayerStore.getState().endsAt).toBeNull()
+    expect(remainingMs(1_000_500)).toBe(500)
+    expect(remainingMs(null)).toBeNull()
+    expect(remainingMs(10)).toBe(0)
+  })
+
+  it('volume is clamped; favourites toggle', () => {
+    const s = usePlayerStore.getState()
+    s.setVolume(3)
+    expect(usePlayerStore.getState().volume).toBe(1)
+    s.setVolume(-1)
+    expect(usePlayerStore.getState().volume).toBe(0)
+    s.toggleFavorite('a/b')
+    s.toggleFavorite('c/d')
+    expect(usePlayerStore.getState().favorites).toEqual(['c/d', 'a/b'])
+    s.toggleFavorite('c/d')
+    expect(usePlayerStore.getState().favorites).toEqual(['a/b'])
   })
 })

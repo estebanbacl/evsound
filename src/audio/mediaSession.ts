@@ -1,9 +1,10 @@
 export interface MediaHandlers {
   play: () => void
   pause: () => void
-  next: () => void
-  prev: () => void
-  seekTo: (s: number) => void
+  stop?: () => void
+  next?: () => void
+  prev?: () => void
+  seekTo?: (s: number) => void
 }
 
 export interface MediaInfo {
@@ -32,9 +33,11 @@ export function installMediaSession(h: MediaHandlers, ms: MS | null = get()) {
   }
   set('play', h.play)
   set('pause', h.pause)
-  set('nexttrack', h.next)
-  set('previoustrack', h.prev)
-  set('seekto', (d) => d.seekTime != null && h.seekTo(d.seekTime))
+  if (h.stop) set('stop', h.stop)
+  if (h.next) set('nexttrack', h.next)
+  if (h.prev) set('previoustrack', h.prev)
+  const seekTo = h.seekTo
+  if (seekTo) set('seekto', (d) => d.seekTime != null && seekTo(d.seekTime))
 }
 
 export function updateMediaSession(

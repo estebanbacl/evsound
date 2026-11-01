@@ -8,7 +8,7 @@ import { NavigationRoute, registerRoute } from 'workbox-routing'
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 import { RangeRequestsPlugin } from 'workbox-range-requests'
-import { DATA_CACHE, MODEL_CACHE, SOUND_CACHE } from './cacheNames'
+import { DATA_CACHE, IMAGE_CACHE, MODEL_CACHE, SOUND_CACHE } from './cacheNames'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -30,6 +30,11 @@ registerRoute(
 registerRoute(
   ({ url }) => url.pathname.startsWith('/models/'),
   new CacheFirst({ cacheName: MODEL_CACHE, plugins: [only200] }),
+)
+// Vehicle renders (~2 MB each): cached the first time they are shown, not precached.
+registerRoute(
+  ({ url }) => url.pathname.startsWith('/images/'),
+  new CacheFirst({ cacheName: IMAGE_CACHE, plugins: [only200] }),
 )
 // Small JSON (catalogs, pack sizes, traces): fast from cache, refreshed in the background.
 registerRoute(

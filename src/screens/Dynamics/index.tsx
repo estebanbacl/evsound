@@ -25,7 +25,6 @@ import { BigNumber } from '../../ui/components/BigNumber'
 import { Panel } from '../../ui/components/Panel'
 import { SegmentedControl } from '../../ui/components/SegmentedControl'
 import { Slider } from '../../ui/components/Slider'
-import { PacksPanel } from '../../app/PacksPanel'
 import { downloadJson } from '../../diagnostics/download'
 import { telemetry } from '../../telemetry'
 import { Waveform } from './Waveform'
@@ -208,7 +207,6 @@ export function DynamicsScreen() {
           {recording ? t.recordStop : t.record}
         </button>
         <p className="dyn-note">{t.recordHint}</p>
-        <PacksPanel />
       </div>
 
       <div className="dyn-instruments">

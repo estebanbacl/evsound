@@ -35,36 +35,36 @@ test.describe('PWA', () => {
     await page.reload() // now controlled by the SW
     await page.waitForFunction(() => !!navigator.serviceWorker.controller)
 
-    await page.goto('/#/dynamics')
+    await page.goto('/#/listen')
     const pack = page
       .getByRole('region', { name: 'Sonidos descargados' })
       .or(page.locator('.packs'))
     await expect(pack.getByText('No descargado').first()).toBeVisible()
-    await page.getByRole('button', { name: 'Descargar Órbita' }).click()
-    await expect(page.getByRole('button', { name: 'Eliminar Órbita' })).toBeVisible({
+    await page.getByRole('button', { name: 'Descargar Naturaleza' }).click()
+    await expect(page.getByRole('button', { name: 'Eliminar Naturaleza' })).toBeVisible({
       timeout: 30_000,
     })
     await expect(pack.getByText(/Descargado/).first()).toBeVisible()
     // the other pack is untouched
-    await expect(page.getByRole('button', { name: 'Descargar Lluvia en cabina' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Descargar Lluvia' })).toBeVisible()
 
     await context.setOffline(true)
     await page.reload()
-    await expect(page.getByRole('region', { name: 'Dinámica' })).toBeVisible()
+    await expect(page.getByRole('region', { name: 'Escuchar' })).toBeVisible()
     await expect(page.getByText('Sin conexión', { exact: true })).toBeVisible()
 
-    // listen: catalog from cache, track streamed from the downloaded pack (range requests)
-    await page.getByRole('link', { name: 'Escuchar' }).click()
-    await page.getByRole('link', { name: /Abrir Órbita/ }).click()
-    await page.getByRole('button', { name: /Perigeo/ }).click()
-    const mini = page.getByRole('group', { name: 'Reproductor' })
-    await expect(mini).toContainText('Perigeo')
-    await expect(mini).not.toContainText('00:00', { timeout: 10_000 })
+    // listen: catalog from cache, sound streamed from the downloaded pack (range requests)
+    await page.getByRole('link', { name: /Abrir Naturaleza/ }).click()
+    await page.getByRole('button', { name: 'Reproducir Bosque tranquilo' }).click()
+    const panel = page.getByRole('complementary', { name: 'Reproduciendo ahora' })
+    await expect(panel).toContainText('Bosque tranquilo')
+    await expect(panel.getByRole('button', { name: 'Pausar' })).toBeVisible()
+    await expect(page.getByText(/No se pudo reproducir/)).toHaveCount(0)
 
     // a pack that was never downloaded is not available offline
     const missing = await page.evaluate(async () => {
       try {
-        const r = await fetch('/sounds/ambient/lluvia-en-cabina/01-gotas-en-el-techo.wav')
+        const r = await fetch('/sounds/ambient/lluvia/lluvia-ligera.wav')
         return r.ok
       } catch {
         return false

@@ -1,7 +1,7 @@
 import { AmbientPlayer } from './AmbientPlayer'
 import { installMediaSession, updateMediaSession } from './mediaSession'
 import { coverSvg } from './cover'
-import { loadCatalog } from './ambientCatalog'
+import { loadCatalog, resetCatalogCache } from './ambientCatalog'
 import type { AudioEngine } from './AudioEngine'
 
 describe('mediaSession', () => {
@@ -37,7 +37,7 @@ describe('mediaSession', () => {
     const { ms, handlers } = mk()
     const seekTo = vi.fn()
     installMediaSession(
-      { play: vi.fn(), pause: vi.fn(), next: vi.fn(), prev: vi.fn(), seekTo },
+      { play: vi.fn(), pause: vi.fn(), stop: vi.fn(), next: vi.fn(), prev: vi.fn(), seekTo },
       ms as never,
     )
     expect(Object.keys(handlers).sort()).toEqual([
@@ -46,6 +46,7 @@ describe('mediaSession', () => {
       'play',
       'previoustrack',
       'seekto',
+      'stop',
     ])
     ;(handlers.seekto as (d: { seekTime: number }) => void)({ seekTime: 12 })
     expect(seekTo).toHaveBeenCalledWith(12)
@@ -69,9 +70,7 @@ describe('mediaSession', () => {
   })
 
   it('is a no-op without Media Session support', () => {
-    expect(() =>
-      installMediaSession({ play() {}, pause() {}, next() {}, prev() {}, seekTo() {} }, null),
-    ).not.toThrow()
+    expect(() => installMediaSession({ play() {}, pause() {} }, null)).not.toThrow()
     expect(() => updateMediaSession(null, false, null, null)).not.toThrow()
   })
 })
@@ -82,9 +81,10 @@ describe('AmbientPlayer', () => {
     Object.assign(el, {
       _src: null,
       currentTime: 0,
-      duration: 30,
       paused: true,
       preload: '',
+      loop: false,
+      volume: 1,
       getAttribute: () => el._src,
       load: vi.fn(),
       play: vi.fn(async () => {
@@ -102,54 +102,69 @@ describe('AmbientPlayer', () => {
   }
   const engine = {
     context: null,
-    input: null,
+    ambientInput: null,
     unlock: vi.fn(async () => ({})),
   } as unknown as AudioEngine
 
-  it('loads a url once, plays, pauses, seeks and reports time/end/error', async () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => vi.useRealTimers())
+
+  it('loops, loads a url once, plays, pauses and stops (rewinding)', async () => {
     const el = mkEl()
-    const cb = { onTime: vi.fn(), onEnded: vi.fn(), onError: vi.fn() }
-    const p = new AmbientPlayer(engine, cb, el)
+    const p = new AmbientPlayer(engine, { onError: vi.fn() }, el)
+    expect(el.loop).toBe(true)
     p.load('/a.wav')
     p.load('/a.wav')
     expect(el.load).toHaveBeenCalledOnce()
     await p.play()
     expect(el.play).toHaveBeenCalled()
+    el.currentTime = 7
     p.pause()
     expect(p.paused).toBe(true)
-    p.seek(12)
-    expect(el.currentTime).toBe(12)
-    el.dispatchEvent(new Event('timeupdate'))
-    expect(cb.onTime).toHaveBeenCalledWith(12, 30)
-    el.dispatchEvent(new Event('ended'))
-    expect(cb.onEnded).toHaveBeenCalled()
-    el.dispatchEvent(new Event('error'))
-    expect(cb.onError).toHaveBeenCalled()
+    expect(el.currentTime).toBe(7)
+    await p.play()
+    p.stop()
+    expect(p.paused).toBe(true)
+    expect(el.currentTime).toBe(0)
   })
 
-  it('reports a blocked play() instead of throwing', async () => {
+  it('sets the element volume independently when there is no audio graph', () => {
+    const el = mkEl()
+    const p = new AmbientPlayer(engine, { onError: vi.fn() }, el)
+    p.setVolume(0.3)
+    expect(el.volume).toBe(0.3)
+    p.setVolume(5)
+    expect(el.volume).toBe(1)
+  })
+
+  it('reports element errors and a blocked play() instead of throwing', async () => {
     const el = mkEl()
     ;(el.play as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('NotAllowed'))
-    const cb = { onTime: vi.fn(), onEnded: vi.fn(), onError: vi.fn() }
-    await new AmbientPlayer(engine, cb, el).play()
-    expect(cb.onError).toHaveBeenCalled()
+    const onError = vi.fn()
+    const p = new AmbientPlayer(engine, { onError }, el)
+    await p.play()
+    el.dispatchEvent(new Event('error'))
+    expect(onError).toHaveBeenCalledTimes(2)
   })
 })
 
 describe('cover + catalog', () => {
-  it('cover is deterministic and brand-free', () => {
-    const c = { style: 'rain' as const, hue: 355, seed: 21 }
-    expect(coverSvg(c)).toBe(coverSvg(c))
-    expect(coverSvg({ style: 'orbit', hue: 2, seed: 7 })).toContain('<svg')
-    expect(coverSvg(c)).not.toMatch(/tesla|icar/i)
+  it('every cover style renders deterministically and brand-free', () => {
+    for (const style of ['forest', 'sea', 'rain', 'night', 'noise', 'orbit'] as const) {
+      const c = { style, hue: 120, seed: 9 }
+      expect(coverSvg(c)).toBe(coverSvg(c))
+      expect(coverSvg(c)).toContain('<svg')
+      expect(coverSvg(c)).not.toMatch(/tesla|icar/i)
+    }
   })
 
   it('loadCatalog retries after a failure', async () => {
+    resetCatalogCache()
     const bad = vi.fn(async () => ({ ok: false, status: 500 }) as Response)
     await expect(loadCatalog(bad as never)).rejects.toThrow()
-    const good = vi.fn(
-      async () => ({ ok: true, json: async () => ({ version: 1, collections: [] }) }) as Response,
-    )
-    await expect(loadCatalog(good as never)).resolves.toEqual({ version: 1, collections: [] })
+    const data = { version: 2, categories: [], sounds: [] }
+    const good = vi.fn(async () => ({ ok: true, json: async () => data }) as Response)
+    await expect(loadCatalog(good as never)).resolves.toEqual(data)
+    resetCatalogCache()
   })
 })

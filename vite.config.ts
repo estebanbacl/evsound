@@ -20,7 +20,8 @@ export default defineConfig({
       manifest: {
         name: 'EV Sound Studio',
         short_name: 'EV Sound',
-        description: 'Sonido de motor dinámico y paisajes sonoros para la cabina de tu vehículo eléctrico.',
+        description:
+          'Sonido de motor dinámico y paisajes sonoros para la cabina de tu vehículo eléctrico.',
         lang: 'es',
         start_url: '.',
         scope: '.',
@@ -31,12 +32,17 @@ export default defineConfig({
         icons: [
           { src: 'icons/pwa-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icons/pwa-512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'icons/pwa-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          {
+            src: 'icons/pwa-maskable-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
         ],
       },
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}', 'offline.html'],
-        globIgnores: ['sounds/**', 'models/**', 'traces/**', 'diagnostics/**'],
+        globIgnores: ['sounds/**', 'models/**', 'images/**', 'traces/**', 'diagnostics/**'],
         // the lazy 3D chunk is ~1 MB raw
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
       },

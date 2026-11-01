@@ -1,0 +1,27 @@
+{
+  "id": "icar-03",
+  "displayName": "iCAR 03",
+  "maker": "iCAR",
+  "verified": false,
+  "body": "offroad",
+  "specs": {
+    "powerKw": 205,
+    "powerHp": 275,
+    "zeroTo100s": 6.5,
+    "rangeKm": 501,
+    "rangeCycle": "CLTC",
+    "batteryKwh": 69.8,
+    "dcChargeKw": 80,
+    "drivetrain": "AWD"
+  },
+  "model3d": {
+    "url": "/models/icar-03.glb",
+    "scale": 1,
+    "cameraPreset": [5.6, 1.9, 5.0]
+  },
+  "calibration": {
+    "maxSpeedKmh": 150,
+    "accelRefMs2": 4.3
+  },
+  "image": "/images/vehicles/icar-03.png"
+}

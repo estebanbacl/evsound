@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { ConnectedMiniPlayer } from '../screens/Listen'
 import { UpdatePrompt } from './UpdatePrompt'
@@ -19,6 +19,14 @@ import { Background } from '../ui/components/Background'
 import { ToastHost } from '../ui/components/Toast'
 import { BottomNav } from './BottomNav'
 import { StatusBar } from './StatusBar'
+
+function skipIntro() {
+  try {
+    return sessionStorage.getItem('ev-skip-intro') === '1'
+  } catch {
+    return false
+  }
+}
 
 /** Keeps stores and the audio singletons in sync. */
 function useAudioSync() {
@@ -50,6 +58,8 @@ export function AppShell() {
   useAudioSync()
   const speedMs = useTelemetryStore((s) => s.speedMs)
   const onboarded = useVehicleStore((s) => s.onboarded)
+  // every visit opens with the instructions; 'Go' dismisses them (sessionStorage flag is a test hook)
+  const [intro, setIntro] = useState(() => !skipIntro() && useVehicleStore.getState().onboarded)
   const driving = useDriveStore((s) => s.active)
   useDriveMode()
   useEffect(() => initAmbient(), [])
@@ -68,7 +78,7 @@ export function AppShell() {
       )}
       <ToastHost />
       <UpdatePrompt />
-      {!onboarded && <Onboarding />}
+      {!onboarded ? <Onboarding /> : intro && <Onboarding onClose={() => setIntro(false)} />}
     </div>
   )
 }

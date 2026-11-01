@@ -1,3 +1,3 @@
 export { ListenHome } from './ListenHome'
-export { CollectionDetail } from './CollectionDetail'
+export { CategoryDetail } from './CategoryDetail'
 export { ConnectedMiniPlayer } from './ConnectedMiniPlayer'
